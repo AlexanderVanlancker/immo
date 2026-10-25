@@ -9,8 +9,14 @@ export interface ListViewOptions {
   onHover: (key: string | null) => void
 }
 
+export interface RenderOptions {
+  /** What is narrowing the list, shown in the empty state. */
+  activeFilters?: string[]
+  onClearFilters?: () => void
+}
+
 export interface ListView {
-  render(listings: Listing[], selectedKey: string | null, totalCount: number): void
+  render(listings: Listing[], selectedKey: string | null, totalCount: number, options?: RenderOptions): void
   setSelected(key: string | null): void
   setHover(key: string | null): void
   scrollTo(key: string): void
@@ -100,29 +106,57 @@ export function createListView(root: HTMLElement, options: ListViewOptions): Lis
     return card
   }
 
-  const renderEmpty = (totalCount: number): void => {
+  const renderEmpty = (totalCount: number, hint?: RenderOptions): void => {
     clear(root)
     cards.clear()
-    root.append(
-      el('div', { class: 'empty-state' }, [
-        el('p', { text: totalCount === 0 ? 'No saved listings found.' : 'No listing matches these filters.' }),
+    const children: (HTMLElement | null)[] = []
+    if (totalCount === 0) {
+      children.push(el('p', { text: 'No saved listings found.' }))
+      children.push(
         el('p', {
-          text:
-            totalCount === 0
-              ? 'Save a listing with the Listing Zipper extension (Immoweb or Immoscoop), drop the ZIP into data/exports/ and reload this page.'
-              : 'Loosen a filter, or clear them all to see every saved listing again.',
+          text: 'Save a listing with the Listing Zipper extension (Immoweb or Immoscoop), drop the ZIP into data/exports/ and reload this page.',
         }),
-      ]),
-    )
+      )
+    } else {
+      children.push(el('p', { text: 'No listing matches these filters.' }))
+      const active = hint?.activeFilters ?? []
+      children.push(
+        el('p', {
+          text: active.length
+            ? 'Currently narrowing the list:'
+            : 'Loosen a filter, or clear them all to see every saved listing again.',
+        }),
+      )
+      if (active.length) {
+        children.push(
+          el(
+            'ul',
+            { class: 'empty-filters' },
+            active.map((entry) => el('li', { text: entry })),
+          ),
+        )
+        if (hint?.onClearFilters) {
+          children.push(
+            el('button', {
+              class: 'action primary',
+              attrs: { type: 'button' },
+              text: 'Clear all filters',
+              on: { click: hint.onClearFilters },
+            }),
+          )
+        }
+      }
+    }
+    root.append(el('div', { class: 'empty-state' }, children))
   }
 
   return {
-    render(listings, selectedKey, totalCount) {
+    render(listings, selectedKey, totalCount, options) {
       const scrollTop = root.scrollTop
       cards.clear()
       clear(root)
       if (listings.length === 0) {
-        renderEmpty(totalCount)
+        renderEmpty(totalCount, options)
         return
       }
       const fragment = document.createDocumentFragment()

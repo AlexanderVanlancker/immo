@@ -2,7 +2,14 @@ import { describe, expect, it } from 'vitest'
 import saleFixture from './fixtures/info-sale.json'
 import rentFixture from './fixtures/info-rent.json'
 import { normaliseListing } from '../server/normalise.ts'
-import { applyFilters, computeFacets, defaultFilters, filtersFromHash, filtersToHash } from '../src/filters.ts'
+import {
+  applyFilters,
+  computeFacets,
+  defaultFilters,
+  describeFilters,
+  filtersFromHash,
+  filtersToHash,
+} from '../src/filters.ts'
 import { computeStats, linearRegression, median } from '../src/stats.ts'
 import type { Listing } from '../src/types.ts'
 
@@ -193,6 +200,66 @@ describe('filters', () => {
     expect(restored.types).toEqual([])
     expect(restored.epc).toEqual([])
     expect(restored.query).toBe('')
+  })
+})
+
+describe('facets', () => {
+  const mixed = () => {
+    const scoop = normaliseListing({
+      key: 'scoop-key',
+      zipFile: 'Aalscholverlaan 78 box 802  2050 — Antwerpen.zip',
+      info: { ...(rentFixture as Record<string, unknown>), source: 'Immoscoop' },
+      photos: [],
+      floorPlans: [],
+      documents: [],
+    })
+    return [sale(), scoop]
+  }
+
+  it('counts each group with the other filters applied', () => {
+    const listings = mixed()
+    const all = computeFacets(listings)
+    expect(all.sources).toEqual([
+      { value: 'Immoscoop', count: 1 },
+      { value: 'Immoweb', count: 1 },
+    ])
+
+    // Selecting a source narrows the *other* groups, but not its own: the
+    // Immoscoop rental is an apartment and carries no EPC label, so those chips
+    // read 1 and 0 respectively instead of vanishing.
+    const pairs = (rows: { value: string; count: number }[]) => rows.map((row) => [row.value, row.count])
+    const scooped = computeFacets(listings, { ...defaultFilters(), sources: ['Immoscoop'] })
+    expect(scooped.sources).toEqual([
+      { value: 'Immoscoop', count: 1 },
+      { value: 'Immoweb', count: 1 },
+    ])
+    expect(pairs(scooped.types)).toEqual([
+      ['apartment', 1],
+      ['house', 0],
+    ])
+    expect(pairs(scooped.epc)).toEqual([['A', 0]])
+
+    // A search that only matches the Immoweb listing leaves Immoscoop at 0,
+    // while the chip itself survives so the filter row does not jump.
+    const searched = computeFacets(listings, { ...defaultFilters(), query: 'example street' })
+    expect(searched.sources).toEqual([
+      { value: 'Immoweb', count: 1 },
+      { value: 'Immoscoop', count: 0 },
+    ])
+  })
+
+  it('describes the active filters for the empty state', () => {
+    expect(describeFilters(defaultFilters())).toEqual([])
+    expect(
+      describeFilters({
+        ...defaultFilters(),
+        sources: ['Immoscoop'],
+        epc: ['A'],
+        priceMax: 500000,
+        query: 'antwerpen',
+        includeSold: false,
+      }),
+    ).toEqual(['Search “antwerpen”', 'Source: Immoscoop', 'EPC: A', 'Price ≤ €500,000', 'Sold / rented hidden'])
   })
 })
 

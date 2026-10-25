@@ -22,6 +22,11 @@ free-text search across address, city, agency, source site, listing id, referenc
 description. Filters live in the URL hash, so a filtered view can be bookmarked. `Filters`
 collapses; the count badge shows how many are active.
 
+Chip counts are faceted: each shows what clicking it would return *given the other active
+filters*, so a chip reading `Immoscoop 0` is honest (and not clickable) while a search or a
+price range rules those listings out. When a combination matches nothing, the empty state lists
+the filters that are narrowing the list and offers **Clear all filters**.
+
 **Listings from more than one site.** Every archive records where it came from
 (`info.json › source`). Cards carry a small source pill, the detail panel names it, and the
 `Source` filter group appears as soon as two sites are present. Listings without coordinates

@@ -29,6 +29,11 @@ const salesWithArea = listings.filter(
 const sources = [...new Set(listings.map((l) => l.source))]
 const cheap = listings.filter((l) => (l.price.value ?? Infinity) <= 480000).length
 const postal2050 = listings.filter((l) => l.address.postalCode === '2050').length
+// A street name that only one listing has — used to prove facet counts react.
+const uniqueStreet = listings.find(
+  (l) => l.address.street && listings.filter((o) => o.address.street === l.address.street).length === 1,
+)?.address.street
+const uniqueStreetSource = listings.find((l) => l.address.street === uniqueStreet)?.source
 
 if (total === 0) {
   console.error(`No listings in ${new URL('/api/listings', BASE)} — drop a ZIP into data/exports/ first.`)
@@ -136,10 +141,27 @@ try {
 
   // --- search ---
   // Street names, postal codes and description text are all indexed.
-  await page.locator('#search').fill('Frarynlaan')
-  await page.waitForTimeout(250)
+  await page.locator('#search').fill(uniqueStreet)
+  await page.waitForTimeout(300)
   const streetHits = await page.locator('.card').count()
-  check('search by street name finds 1', streetHits === 1, `got ${streetHits}`)
+  check(`search by street name ("${uniqueStreet}") finds 1`, streetHits === 1, `got ${streetHits}`)
+
+  if (sources.length > 1) {
+    const other = sources.find((source) => source !== uniqueStreetSource)
+    const otherChip = page.locator(`.filter-group:has-text("Source") .chip[data-value="${other}"]`)
+    const otherCount = (await otherChip.locator('.count').innerText()).trim()
+    check(`facet count is honest while searching (${other} shows 0)`, otherCount === '0', `got "${otherCount}"`)
+    check('a zero-count chip is not clickable', await otherChip.isDisabled())
+  }
+
+  // --- empty state explains itself ---
+  await page.locator('#search').fill('zzzznomatch')
+  await page.waitForTimeout(300)
+  const emptyText = (await page.locator('.empty-state').innerText()).replace(/\s+/g, ' ')
+  check('empty state names the active filter', /Currently narrowing the list/.test(emptyText) && /zzzznomatch/.test(emptyText), emptyText.slice(0, 120))
+  await page.locator('.empty-state button', { hasText: 'Clear all filters' }).click()
+  await page.waitForTimeout(300)
+  check('“Clear all filters” restores every listing', (await page.locator('.card').count()) === total)
 
   await page.locator('#search').fill('2050')
   await page.waitForTimeout(250)

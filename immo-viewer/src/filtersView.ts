@@ -25,6 +25,7 @@ interface ChipSpec {
 class ChipGroup {
   private signature = ''
   private buttons = new Map<string, HTMLButtonElement>()
+  private counts = new Map<string, number | undefined>()
 
   constructor(
     private readonly container: HTMLElement,
@@ -36,6 +37,7 @@ class ChipGroup {
     if (signature !== this.signature) {
       this.signature = signature
       this.buttons.clear()
+      this.counts.clear()
       clear(this.container)
       for (const item of items) {
         const button = el(
@@ -63,6 +65,7 @@ class ChipGroup {
         )
         if (item.epc) button.style.setProperty('--epc-color', epcColor(item.value))
         this.buttons.set(item.value, button)
+        this.counts.set(item.value, item.count)
         this.container.append(button)
       }
     }
@@ -70,8 +73,15 @@ class ChipGroup {
     const selectedSet = new Set(selected)
     for (const [value, button] of this.buttons) {
       const active = selectedSet.has(value)
+      // A chip showing 0 cannot lead anywhere, so it is not clickable — unless it
+      // is the selected one, which must stay removable.
+      const unreachable = this.counts.get(value) === 0 && !active
       button.classList.toggle('is-active', active)
+      button.classList.toggle('is-empty', unreachable)
+      button.disabled = unreachable
       button.setAttribute('aria-pressed', active ? 'true' : 'false')
+      if (unreachable) button.title = 'No listing matches your other filters'
+      else button.removeAttribute('title')
     }
   }
 }

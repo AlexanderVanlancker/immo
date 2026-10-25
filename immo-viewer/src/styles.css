@@ -488,6 +488,41 @@ a {
   line-height: 1.6;
 }
 
+.empty-state p {
+  margin: 0 0 6px;
+}
+
+.empty-filters {
+  margin: 10px auto 14px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.empty-filters li {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 2px 8px;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.empty-state .action {
+  display: inline-flex;
+  margin: 0 auto;
+}
+
+.chip.is-empty {
+  opacity: 0.45;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
 /* ---------- listing card ---------- */
 
 .card {

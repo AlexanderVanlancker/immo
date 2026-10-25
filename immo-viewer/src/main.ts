@@ -4,7 +4,7 @@ import './styles.css'
 import { fetchListings } from './api'
 import { DetailView } from './detailView'
 import { debounce } from './dom'
-import { activeFilterCount, computeFacets, type Facets } from './filters'
+import { activeFilterCount, computeFacets, describeFilters, filtersToHash, type Facets } from './filters'
 import { createFiltersView } from './filtersView'
 import { createListView } from './listView'
 import { MapView } from './mapView'
@@ -193,11 +193,12 @@ function setStatus(state: AppState): void {
   statusNode.append(refresh)
 }
 
+/** Chip counts depend on the active filters, so the cache key includes them. */
 function ensureFacets(state: AppState): void {
-  const signature = state.all.map((listing) => listing.key).join('|')
+  const signature = `${state.all.map((listing) => listing.key).join('|')}#${filtersToHash(state.filters)}`
   if (signature === facetSignature) return
   facetSignature = signature
-  facets = computeFacets(state.all)
+  facets = computeFacets(state.all, state.filters)
 }
 
 function render(state: AppState, reason: ChangeReason): void {
@@ -216,7 +217,10 @@ function render(state: AppState, reason: ChangeReason): void {
     if (searchInput.value !== state.filters.query && document.activeElement !== searchInput) {
       searchInput.value = state.filters.query
     }
-    listView.render(state.filtered, state.selectedKey, state.all.length)
+    listView.render(state.filtered, state.selectedKey, state.all.length, {
+      activeFilters: describeFilters(state.filters),
+      onClearFilters: () => store.resetFilters(),
+    })
     mapView.update(state.filtered, state.selectedKey)
     if (state.view === 'stats') statsView.render(state.filtered, state.all.length)
   }
