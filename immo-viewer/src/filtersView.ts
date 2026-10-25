@@ -114,6 +114,14 @@ export function createFiltersView(root: HTMLElement, options: FiltersViewOptions
     options.onChange({ transaction: value as FilterState['transaction'] })
   })
 
+  // Source site (only useful once more than one site is saved)
+  const sourceGroup = group('Source')
+  const sourceChips = el('div', { class: 'chips' })
+  sourceGroup.append(sourceChips)
+  const sourceGroupCtl = new ChipGroup(sourceChips, (value) => {
+    options.onChange({ sources: toggleValue(currentFilters.sources, value) })
+  })
+
   // Property type
   const typeChips = el('div', { class: 'chips' })
   group('Property type').append(typeChips)
@@ -199,6 +207,11 @@ export function createFiltersView(root: HTMLElement, options: FiltersViewOptions
       typeGroup.update(
         facets.types.map((item) => ({ value: item.value, label: item.label, count: item.count })),
         filters.types,
+      )
+      sourceGroup.hidden = facets.sources.length < 2
+      sourceGroupCtl.update(
+        facets.sources.map((item) => ({ value: item.value, label: item.value, count: item.count })),
+        filters.sources,
       )
       postalGroup.update(
         facets.postalCodes.map((item) => ({

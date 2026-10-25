@@ -205,6 +205,7 @@ export function normaliseListing({ key, zipFile, info, photos, floorPlans, docum
     zipFile,
     immowebId: asNumber(info.id),
     externalReference: asString(info.externalReference),
+    source: asString(info.source) ?? 'Immoweb',
     url: asString(info.url),
     title,
     capturedAt: asString(info.capturedAt),

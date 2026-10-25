@@ -13,21 +13,6 @@ let pollTimer = null;
  * Helpers
  * ------------------------------------------------------------------ */
 
-function isListingUrl(url) {
-  try {
-    const parsed = new URL(url);
-    if (!/(^|\.)immoweb\.(be|com)$/i.test(parsed.hostname)) return false;
-    return /\/classified\//i.test(parsed.pathname);
-  } catch (error) {
-    return false;
-  }
-}
-
-function listingId(url) {
-  const match = /\/(\d{5,})(?:[/?#]|$)/.exec(url || '');
-  return match ? match[1] : null;
-}
-
 function formatBytes(bytes) {
   if (!bytes) return '';
   if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
@@ -61,27 +46,21 @@ async function persistOptions() {
 function renderPageInfo() {
   const info = el('page-info');
   const url = currentTab && currentTab.url;
-  if (url && isListingUrl(url)) {
-    const id = listingId(url);
-    const kind = /\/for-rent\//i.test(url) ? 'for rent' : /\/for-sale\//i.test(url) ? 'for sale' : 'listing';
-    info.textContent = 'Listing ' + (id || '') + ' · ' + kind + ' · ready to save';
+  const site = siteForListingUrl(url);
+  if (site) {
+    const id = listingIdFromUrl(url);
+    const kind = listingKindFromUrl(url);
+    info.textContent =
+      site.label + ' ' + (id ? 'listing ' + id : 'listing') + ' · ' + kind + ' · ready to save';
     info.classList.add('on-listing');
     return true;
   }
   info.classList.remove('on-listing');
-  info.textContent =
-    url && /(^|\.)immoweb\.(be|com)$/i.test(safeHostname(url))
-      ? 'Open a listing page (…/classified/…), then click save.'
-      : 'Open an Immoweb listing page to save it as a ZIP.';
+  const known = siteForUrl(url);
+  info.textContent = known
+    ? known.hint
+    : 'Open an Immoweb or Immoscoop listing page to save it as a ZIP.';
   return false;
-}
-
-function safeHostname(url) {
-  try {
-    return new URL(url).hostname;
-  } catch (error) {
-    return '';
-  }
 }
 
 function renderJob() {

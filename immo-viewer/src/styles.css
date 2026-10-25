@@ -643,6 +643,12 @@ a {
   color: var(--warn);
 }
 
+.pill.source {
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 600;
+}
+
 .pill.sold {
   background: #fdecea;
   border-color: #f6cfcb;

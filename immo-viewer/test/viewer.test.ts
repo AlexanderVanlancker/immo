@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import saleFixture from './fixtures/info-sale.json'
 import rentFixture from './fixtures/info-rent.json'
 import { normaliseListing } from '../server/normalise.ts'
-import { applyFilters, defaultFilters, filtersFromHash, filtersToHash } from '../src/filters.ts'
+import { applyFilters, computeFacets, defaultFilters, filtersFromHash, filtersToHash } from '../src/filters.ts'
 import { computeStats, linearRegression, median } from '../src/stats.ts'
 import type { Listing } from '../src/types.ts'
 
@@ -142,10 +142,39 @@ describe('filters', () => {
     expect(applyFilters(listings, { ...defaultFilters(), includeSold: false }).map((l) => l.key)).toEqual(['sale-key'])
   })
 
+  it('filters by source site and counts the facet', () => {
+    const immoscoop = normaliseListing({
+      key: 'scoop-key',
+      zipFile: 'Aalscholverlaan 78 box 802  2050 — Antwerpen.zip',
+      info: { ...(rentFixture as Record<string, unknown>), source: 'Immoscoop' },
+      photos: [],
+      floorPlans: [],
+      documents: [],
+    })
+    expect(immoscoop.source).toBe('Immoscoop')
+    expect(sale().source).toBe('Immoweb')
+
+    const mixed = [sale(), immoscoop]
+    expect(applyFilters(mixed, { ...defaultFilters(), sources: ['Immoscoop'] }).map((l) => l.key)).toEqual([
+      'scoop-key',
+    ])
+    expect(applyFilters(mixed, { ...defaultFilters(), sources: ['Immoweb'] }).map((l) => l.key)).toEqual([
+      'sale-key',
+    ])
+    expect(applyFilters(mixed, { ...defaultFilters(), sources: [] })).toHaveLength(2)
+
+    const facets = computeFacets(mixed)
+    expect(facets.sources).toEqual([
+      { value: 'Immoscoop', count: 1 },
+      { value: 'Immoweb', count: 1 },
+    ])
+  })
+
   it('round-trips through the URL hash', () => {
     const filters = {
       ...defaultFilters(),
       transaction: 'for-sale' as const,
+      sources: ['Immoweb', 'Immoscoop'],
       epc: ['A', 'B'],
       types: ['house'],
       priceMin: 100000,

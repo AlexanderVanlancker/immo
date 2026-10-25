@@ -90,9 +90,11 @@ function baseSandbox() {
         this.type = options && options.type;
       }
     },
-    URL: {
-      createObjectURL: () => 'blob:chrome-extension://test/zip-1',
-      revokeObjectURL: () => {},
+    URL: class MockURL extends URL {
+      static createObjectURL() {
+        return 'blob:chrome-extension://test/zip-1';
+      }
+      static revokeObjectURL() {}
     },
     fetch: async () => ({
       ok: true,
@@ -105,6 +107,7 @@ function baseSandbox() {
 
 /* --- service worker context ------------------------------------------- */
 const worker = makeRuntime('service-worker');
+let pageResult = null;
 const workerChrome = {
   runtime: worker.runtime,
   storage: {
@@ -121,16 +124,19 @@ const workerChrome = {
   scripting: {
     executeScript: async ({ args }) => {
       if (failExtraction) throw new Error('Cannot access contents of the page');
+      if (pageResult) return [{ result: pageResult }];
       const classified = JSON.parse(
         fs.readFileSync(path.join(here, 'fixtures', 'sale.json'), 'utf8')
       );
       return [
         {
           result: {
+            site: 'immoweb',
             url: 'https://www.immoweb.be/en/classified/penthouse/for-sale/antwerpen/2000/21807693',
             lang: 'en',
             capturedAt: new Date().toISOString(),
             classified,
+            scoop: null,
             fallback: null,
             html: args[0] ? '<html>snapshot</html>' : null,
           },
@@ -165,11 +171,50 @@ const workerChrome = {
 const workerSandbox = baseSandbox();
 workerSandbox.chrome = workerChrome;
 workerSandbox.self = workerSandbox;
+// The service worker pulls sites.js in with importScripts(), like Chrome does.
+workerSandbox.importScripts = (...files) => {
+  for (const file of files) {
+    vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), workerSandbox, {
+      filename: file,
+    });
+  }
+};
 vm.createContext(workerSandbox);
 vm.runInContext(fs.readFileSync(path.join(root, 'background.js'), 'utf8'), workerSandbox, {
   filename: 'background.js',
 });
 assert(worker.listeners.length === 1, 'background.js registered a message listener');
+assert(
+  vm.runInContext('LISTING_SITES.length', workerSandbox) === 2,
+  'sites.js was imported by the service worker'
+);
+
+/* --- which URLs count as a listing ------------------------------------ */
+{
+  const inPage = (expression) => vm.runInContext(expression, workerSandbox);
+  const isListing = (url) => inPage('Boolean(siteForListingUrl(' + JSON.stringify(url) + '))');
+
+  assert(isListing('https://www.immoweb.be/nl/classified/x/2000/21807693'), 'Immoweb listing recognised');
+  assert(!isListing('https://www.immoweb.be/nl/zoeken'), 'Immoweb search page rejected');
+  assert(isListing('https://www.immoscoop.be/te-koop/2050-antwerpen/1196193'), 'Immoscoop sale recognised');
+  assert(isListing('https://www.immoscoop.be/te-huur/2050-antwerpen/1228194'), 'Immoscoop rent recognised');
+  assert(isListing('https://www.immoscoop.be/a-vendre/1000-bruxelles/1234567'), 'Immoscoop FR route recognised');
+  assert(!isListing('https://www.immoscoop.be/zoeken?q=antwerpen'), 'Immoscoop search page rejected');
+  assert(
+    inPage("listingKindFromUrl('https://www.immoscoop.be/te-huur/2050-antwerpen/1228194')") === 'for rent',
+    'kind read from the Immoscoop path'
+  );
+  assert(
+    inPage("listingIdFromUrl('https://www.immoscoop.be/te-koop/2050-antwerpen/1196193')") === '1196193',
+    'listing id read from the Immoscoop path'
+  );
+  assert(
+    inPage("listingIdFromUrl('https://www.immoweb.be/nl/classified/huis/te-koop/antwerpen/2000/21807693')") ===
+      '21807693',
+    'Immoweb id is the trailing number, not the postal code'
+  );
+  console.log('site matchers: ok');
+}
 
 /* --- offscreen document context (created on demand) -------------------- */
 function createOffscreenContext() {
@@ -241,6 +286,37 @@ const busy = await callWorker({ type: 'start-job', tabId: 7, options: {} });
 assert(/already running/i.test(busy.error), 'second concurrent save rejected: ' + busy.error);
 storage.delete('job');
 
+/* --- Immoscoop: same flow, other site --------------------------------- */
+{
+  const scoop = JSON.parse(fs.readFileSync(path.join(here, 'fixtures', 'scoop-rent.json'), 'utf8'));
+  pageResult = {
+    site: 'immoscoop',
+    url: 'https://www.immoscoop.be/te-huur/2050-antwerpen/' + scoop.id,
+    lang: 'nl',
+    capturedAt: new Date().toISOString(),
+    classified: null,
+    scoop,
+    fallback: null,
+    html: null,
+  };
+  storage.delete('job');
+  const scoopResponse = await callWorker({
+    type: 'start-job',
+    tabId: 8,
+    options: { photoSize: 'medium' },
+  });
+  assert(scoopResponse && scoopResponse.ok, 'Immoscoop save succeeded: ' + JSON.stringify(scoopResponse));
+  assert(
+    /^Aalscholverlaan 78 box 802  2050 — Antwerpen\.zip$/.test(scoopResponse.filename),
+    'Immoscoop zip is named after the address: ' + scoopResponse.filename
+  );
+  const scoopJob = storage.get('job');
+  assert(scoopJob.status === 'done', 'Immoscoop job finished');
+  assert(downloads.length === 2, 'second download requested for Immoscoop');
+  console.log('Immoscoop flow: ' + scoopResponse.filename + ' — ok');
+  pageResult = null;
+}
+
 /* --- the injected page reader (runs in the page's MAIN world) ---------- */
 {
   const classified = JSON.parse(fs.readFileSync(path.join(here, 'fixtures', 'sale.json'), 'utf8'));
@@ -253,12 +329,14 @@ storage.delete('job');
   };
   workerSandbox.document = doc;
   workerSandbox.location = {
+    hostname: 'www.immoweb.be',
     href: 'https://www.immoweb.be/nl/classified/penthouse/te-koop/antwerpen/2000/21807693',
   };
   workerSandbox.window = { classified };
 
   const payload = workerSandbox.readListing(true);
   assert(payload.classified && payload.classified.id === 21807693, 'window.classified is read');
+  assert(payload.site === 'immoweb', 'Immoweb detected from the hostname');
   assert(payload.lang === 'en', 'language comes from the listing: ' + payload.lang);
   assert(payload.url.includes('/classified/'), 'url captured');
   assert(typeof payload.html === 'string' && payload.html.includes('page snapshot'), 'html snapshot');
@@ -275,6 +353,46 @@ storage.delete('job');
   assert(fallbackPayload.html === null, 'html skipped unless requested');
   assert(fallbackPayload.fallback.title === doc.title, 'fallback still usable');
   console.log('page reader (MAIN world): ok');
+}
+
+/* --- the injected page reader on Immoscoop ---------------------------- */
+{
+  const property = JSON.parse(
+    fs.readFileSync(path.join(here, 'fixtures', 'scoop-rent.json'), 'utf8')
+  );
+  const nextData = { props: { pageProps: { property } } };
+  const thumbs = property.images.slice(0, 2).map((image) => ({
+    src: image.sizes['320'],
+    currentSrc: image.sizes['320'],
+  }));
+  workerSandbox.document = {
+    documentElement: { lang: 'nl', outerHTML: '<html><body>scoop snapshot</body></html>' },
+    title: 'Appartement te huur in Antwerpen | Immoscoop',
+    body: { innerText: 'te huur 2050 Antwerpen' },
+    getElementById: (id) => (id === '__NEXT_DATA__' ? { textContent: JSON.stringify(nextData) } : null),
+    querySelector: () => null,
+    querySelectorAll: (selector) => (/immoscoop/.test(selector) ? thumbs : []),
+  };
+  workerSandbox.location = {
+    hostname: 'www.immoscoop.be',
+    href: 'https://www.immoscoop.be/te-huur/2050-antwerpen/' + property.id,
+  };
+  workerSandbox.window = {};
+
+  const payload = workerSandbox.readListing(false);
+  assert(payload.site === 'immoscoop', 'Immoscoop detected from the hostname');
+  assert(payload.scoop && payload.scoop.id === property.id, '__NEXT_DATA__ property is read');
+  assert(payload.classified === null, 'no Immoweb payload on an Immoscoop page');
+  assert(payload.lang === 'nl', 'language comes from descriptionLanguage: ' + payload.lang);
+  assert(payload.html === null, 'html skipped unless requested');
+  assert(payload.fallback.images.length === 2, 'DOM images kept as a fallback');
+
+  // Immoscoop without __NEXT_DATA__ (A/B variant) → DOM fallback, no crash.
+  workerSandbox.document.getElementById = () => null;
+  const noData = workerSandbox.readListing(false);
+  assert(noData.scoop === null, 'missing __NEXT_DATA__ → null scoop');
+  assert(noData.fallback.title === workerSandbox.document.title, 'fallback still usable');
+  console.log('page reader on Immoscoop: ok');
 }
 
 console.log('service worker + offscreen integration: ok');

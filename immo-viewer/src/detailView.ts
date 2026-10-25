@@ -292,7 +292,8 @@ export class DetailView {
       fact('Province', address.province),
       fact('Region', address.region),
       fact('District', address.district),
-      fact('Immoweb ID', listing.immowebId === null ? null : String(listing.immowebId)),
+      fact(`${listing.source} ID`, listing.immowebId === null ? null : String(listing.immowebId)),
+      fact('Source', listing.source),
       fact('Reference', listing.externalReference),
       fact('Published', listing.publishedAt ? `${date(listing.publishedAt)} (${relativeDays(listing.publishedAt)})` : null),
       fact('Saved', date(listing.capturedAt)),
@@ -450,7 +451,7 @@ export class DetailView {
       actions.push(
         el('a', { class: 'action primary', attrs: { href: listing.url, target: '_blank', rel: 'noreferrer noopener' } }, [
           svgIcon(EXTERNAL_ICON),
-          'Open on Immoweb',
+          `Open on ${listing.source}`,
         ]),
       )
     }

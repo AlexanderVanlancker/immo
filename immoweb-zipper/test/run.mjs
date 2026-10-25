@@ -153,15 +153,29 @@ async function build(payloadFile, options) {
   const { listener } = loadArchiver(progress);
   if (!listener) throw new Error('offscreen.js registered no message listener');
 
-  const classified = JSON.parse(fs.readFileSync(path.join(here, 'fixtures', payloadFile), 'utf8'));
-  const payload = {
-    url: 'https://www.immoweb.be/en/classified/x/' + classified.id,
-    lang: 'en',
-    capturedAt: new Date().toISOString(),
-    classified,
-    fallback: null,
-    html: options.includePageHtml ? '<html><body>snapshot</body></html>' : null,
-  };
+  const source = JSON.parse(fs.readFileSync(path.join(here, 'fixtures', payloadFile), 'utf8'));
+  const scoop = /^scoop-/.test(payloadFile);
+  const payload = scoop
+    ? {
+        site: 'immoscoop',
+        url: 'https://www.immoscoop.be/te-koop/2050-antwerpen/' + source.id,
+        lang: 'nl',
+        capturedAt: new Date().toISOString(),
+        classified: null,
+        scoop: source,
+        fallback: null,
+        html: options.includePageHtml ? '<html><body>snapshot</body></html>' : null,
+      }
+    : {
+        site: 'immoweb',
+        url: 'https://www.immoweb.be/en/classified/x/' + source.id,
+        lang: 'en',
+        capturedAt: new Date().toISOString(),
+        classified: source,
+        scoop: null,
+        fallback: null,
+        html: options.includePageHtml ? '<html><body>snapshot</body></html>' : null,
+      };
 
   const result = await new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error('build-zip timed out')), 180000);
@@ -219,10 +233,17 @@ const FIXTURES = [
   { file: 'sale.json', kind: 'for-sale', photos: 23, floorPlans: 0, documents: 0 },
   { file: 'rent.json', kind: 'for-rent', photos: 10, floorPlans: 0, documents: 0 },
   { file: 'house.json', kind: 'for-sale', photos: 16, floorPlans: 1, documents: 0 },
+  // Immoscoop: no floor plans or brochures in its payload, photos from `images`.
+  { file: 'scoop-sale.json', kind: 'for-sale', floorPlans: 0, documents: 0 },
+  { file: 'scoop-rent.json', kind: 'for-rent', floorPlans: 0, documents: 0 },
 ];
 
 for (const spec of FIXTURES) {
   const fixture = spec.file;
+  const fixtureData = JSON.parse(fs.readFileSync(path.join(here, 'fixtures', fixture), 'utf8'));
+  if (spec.photos === undefined) {
+    spec.photos = (fixtureData.images || []).length;
+  }
   const { result, zipPath, progress } = await build(fixture, {
     photoSize: 'extra',
     includePageHtml: false,
@@ -260,9 +281,6 @@ for (const spec of FIXTURES) {
   const roundTripped = JSON.parse(
     fs.readFileSync(path.join(extractDir, folder, 'listing.json'), 'utf8')
   );
-  const fixtureData = JSON.parse(
-    fs.readFileSync(path.join(here, 'fixtures', fixture), 'utf8')
-  );
   assert(
     JSON.stringify(roundTripped) === JSON.stringify(fixtureData),
     'listing.json round-trips the source data'
@@ -271,8 +289,8 @@ for (const spec of FIXTURES) {
   const info = JSON.parse(fs.readFileSync(path.join(extractDir, folder, 'info.json'), 'utf8'));
   const summary = fs.readFileSync(path.join(extractDir, folder, 'summary.md'), 'utf8');
   assert(
-    /  \d{4} — \S/.test(folder),
-    'folder is "<address>  <postal> — <city>": ' + folder
+    /  \d{4} — \S/.test(folder) || /^\d{4} — \S/.test(folder),
+    'folder names the address, or the postal code when the address is hidden: ' + folder
   );
   console.log('folder:', folder);
   console.log('kind:', info.transaction.kind, '| price:', info.price.display);
@@ -395,6 +413,103 @@ delete process.env.FAIL_EVERY;
   assert(entries.some((p) => p.endsWith('/summary.md')), 'a summary is still produced');
   assert(result.warnings.length > 0, 'the problem is reported in download-errors.txt');
   console.log('\n=== malformed data: ' + result.filename + ' — still saved, ' + result.warnings.length + ' warning(s)');
+}
+
+/* --- Immoscoop: the mapping from its Dutch detail groups ---------------- */
+{
+  const sale = await build('scoop-sale.json', { photoSize: 'extra' });
+  const saleDir = path.join(outDir, 'x-scoop-sale');
+  unzipTo(sale.zipPath, saleDir);
+  const saleFolder = sale.result.filename.replace('.zip', '');
+  const infoPath = path.join(saleDir, saleFolder, 'info.json');
+  const saleInfo = JSON.parse(fs.readFileSync(infoPath, 'utf8'));
+  const saleSummary = fs.readFileSync(path.join(saleDir, saleFolder, 'summary.md'), 'utf8');
+  const saleReadme = fs.readFileSync(path.join(saleDir, saleFolder, 'README.txt'), 'utf8');
+
+  console.log('\n=== Immoscoop sale → ' + saleFolder);
+  console.log('price:', saleInfo.price.display, '| living:', saleInfo.property.livingArea,
+    '| €/m²:', saleInfo.price.computedPricePerSqm, '| EPC:', saleInfo.energy.epcScore);
+  console.log('agency:', saleInfo.agency.map((a) => a.name).join(', '), '| details:', saleInfo.details.length);
+
+  assert(saleInfo.source === 'Immoscoop', 'source is Immoscoop');
+  assert(saleInfo.transaction.kind === 'for-sale', 'sale listing is for sale');
+  assert(saleInfo.transaction.typeLabel === 'For sale', 'transaction label');
+  assert(saleInfo.price.value === 1250000, 'price value parsed from price.slug: ' + saleInfo.price.value);
+  assert(saleInfo.price.display === '€\u00a01.250.000', 'price display kept verbatim');
+  assert(saleInfo.property.livingArea === 195, 'living area from features: ' + saleInfo.property.livingArea);
+  assert(saleInfo.property.plotArea === 195, 'plot area from features');
+  assert(saleInfo.property.bedrooms === 3, 'bedrooms from features');
+  assert(saleInfo.property.bathrooms === 2, 'bathrooms from features');
+  assert(saleInfo.property.type === 'APARTMENT', 'type token: ' + saleInfo.property.type);
+  assert(saleInfo.property.typeLabel === 'Apartment', 'type label: ' + saleInfo.property.typeLabel);
+  assert(saleInfo.property.subtypeLabel === 'Penthouse', 'subtype from "Subtype": ' + saleInfo.property.subtypeLabel);
+  assert(saleInfo.price.computedPricePerSqm === 6410, '€/m² computed: ' + saleInfo.price.computedPricePerSqm);
+  assert(saleInfo.energy.epcScore === 'A', 'EPC label');
+  assert(saleInfo.energy.energyPerSqmYear === 57, 'EPC kWh/m²/year: ' + saleInfo.energy.energyPerSqmYear);
+  assert(/^11002-/.test(saleInfo.energy.epcReference), 'EPC unique code captured');
+  assert(saleInfo.heating.doubleGlazing === true, 'double glazing from "Dubbele beglazing"');
+  assert(saleInfo.heating.heatPump === true, 'heat pump recognised in "Warmtepomp"');
+  assert(saleInfo.certificates.electricalCertificate === true, 'electrical certificate "Ja, conform"');
+  assert(saleInfo.certificates.constructionPermitObtained === true, 'building permit');
+  assert(/overstroming/i.test(String(saleInfo.certificates.floodZoneLabel)), 'flood zone text kept');
+  assert(saleInfo.property.bedroomSurfaces.join(',') === '15,13,13', 'bedroom surfaces: ' + saleInfo.property.bedroomSurfaces);
+  assert(saleInfo.property.terraceArea === 50, 'terrace area from details');
+  assert(saleInfo.location.postalCode === '2050', 'postal code');
+  assert(saleInfo.location.locality === 'Antwerpen', 'city');
+  assert(saleInfo.location.street === null, 'street stays hidden when Immoscoop hides it');
+  assert(saleInfo.location.latitude === null, 'no coordinates when the address is hidden');
+  assert(saleInfo.location.exact === false, 'address flagged as inexact');
+  assert(/does not publish the exact address/.test(saleInfo.note || ''), 'note explains the missing address');
+  assert(/^2050 — Antwerpen$/.test(saleFolder), 'folder falls back to postal code: ' + saleFolder);
+  assert(saleInfo.details.length >= 30, 'detail groups flattened: ' + saleInfo.details.length);
+  assert(
+    !/[<>]/.test(String(saleInfo.property.description)) && /\n/.test(String(saleInfo.property.description)),
+    'description HTML stripped but line breaks kept'
+  );
+  assert(saleInfo.agency.length === 1 && saleInfo.agency[0].name, 'agency from agent');
+  assert(saleInfo.media.pictureCount === 19, 'picture count');
+  assert(/Immoscoop listing/.test(saleSummary), 'summary names the source site');
+  assert(/Immoscoop listing archive/.test(saleReadme), 'README names the source site');
+
+  const rent = await build('scoop-rent.json', { photoSize: 'medium' });
+  const rentDir = path.join(outDir, 'x-scoop-rent');
+  unzipTo(rent.zipPath, rentDir);
+  const rentFolder = rent.result.filename.replace('.zip', '');
+  const rentInfo = JSON.parse(fs.readFileSync(path.join(rentDir, rentFolder, 'info.json'), 'utf8'));
+  const rentEntries = zipNames(rent.zipPath);
+
+  console.log('=== Immoscoop rent → ' + rentFolder);
+  console.log('rent:', rentInfo.price.rent && rentInfo.price.rent.monthly, '| living:', rentInfo.property.livingArea,
+    '| coords:', rentInfo.location.latitude + ',' + rentInfo.location.longitude);
+
+  assert(rentInfo.transaction.kind === 'for-rent', 'rental listing is for rent');
+  assert(rentInfo.price.rent && rentInfo.price.rent.monthly === 2200, 'monthly rent parsed');
+  assert(rentInfo.price.computedPricePerSqm === 16, '€/m²/month computed: ' + rentInfo.price.computedPricePerSqm);
+  assert(rentInfo.location.street === 'Aalscholverlaan', 'visible street trimmed: ' + rentInfo.location.street);
+  assert(rentInfo.location.number === '78', 'house number as string');
+  assert(rentInfo.location.box === '802', 'box from houseNumber.extension');
+  assert(rentInfo.location.latitude === 51.21728, 'latitude');
+  assert(rentInfo.location.longitude === 4.371386, 'longitude');
+  assert(rentInfo.location.exact === true, 'exact address flagged');
+  assert(rentInfo.property.constructionYear === 2017, 'construction year from "Bouwjaar"');
+  assert(rentInfo.property.floor === 8, 'floor from "Verdieping"');
+  assert(
+    /^Aalscholverlaan 78 box 802  2050 — Antwerpen$/.test(rentFolder),
+    'folder is the address: ' + rentFolder
+  );
+  assert(rentInfo.media.pictureCount === rentEntries.filter((p) => p.includes('/photos/')).length,
+    'every Immoscoop photo saved');
+  assert(rentEntries.every((p) => /\.(jpg|png|jpeg|webp|avif)$/i.test(p) || !p.includes('/photos/')),
+    'photo files carry a real extension');
+  assert(!rentEntries.some((p) => p.includes('/floorplans/') || p.includes('/documents/')),
+    'no empty media folders for Immoscoop');
+
+  runs.push({
+    fixture: 'scoop-*',
+    filename: sale.result.filename,
+    size: sale.result.size,
+    entries: zipNames(sale.zipPath).length,
+  });
 }
 
 console.log('\nAll checks passed.');

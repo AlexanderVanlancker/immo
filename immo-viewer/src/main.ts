@@ -33,7 +33,7 @@ const tabs = [...document.querySelectorAll<HTMLButtonElement>('.tab')]
 
 const store = new Store()
 
-let facets: Facets = { types: [], epc: [], postalCodes: [], prices: { min: 0, max: 0 }, living: { min: 0, max: 0 } }
+let facets: Facets = { sources: [], types: [], epc: [], postalCodes: [], prices: { min: 0, max: 0 }, living: { min: 0, max: 0 } }
 let facetSignature = ''
 let lastFetch = 0
 

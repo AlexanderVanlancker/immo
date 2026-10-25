@@ -83,15 +83,17 @@ function releaseBlob() {
 
 async function buildZip(payload, options) {
   const opts = { photoSize: 'extra', includePageHtml: false, ...options };
-  const data = payload.classified || null;
+  const site = payload.site === 'immoscoop' ? 'immoscoop' : 'immoweb';
+  const data = site === 'immoscoop' ? payload.scoop || null : payload.classified || null;
+  const normalise = site === 'immoscoop' ? normalizeScoop : normalize;
   const files = [];
   const warnings = [];
 
-  // Immoweb keeps changing the shape of its listing object. A surprise in the
-  // structured data must never cost the user the photos or the raw JSON.
+  // Both sites keep changing the shape of their listing objects. A surprise in
+  // the structured data must never cost the user the photos or the raw JSON.
   let info;
   try {
-    info = data ? normalize(data, payload) : normalizeFallback(payload);
+    info = data ? normalise(data, payload) : normalizeFallback(payload);
   } catch (error) {
     warnings.push({
       url: payload.url,
@@ -138,10 +140,17 @@ async function buildZip(payload, options) {
       return [];
     }
   };
-  const photos = safely(() => collectPictures(data, payload, opts, 'pictures', usedUrls));
-  const floorPlans = safely(() => collectPictures(data, payload, opts, 'floorPlans', usedUrls));
+  const photos = safely(() =>
+    site === 'immoscoop'
+      ? collectScoopPictures(data, payload, opts, usedUrls)
+      : collectPictures(data, payload, opts, 'pictures', usedUrls)
+  );
+  const floorPlans =
+    site === 'immoscoop' ? [] : safely(() => collectPictures(data, payload, opts, 'floorPlans', usedUrls));
   const documents =
-    opts.includeDocuments === false ? [] : safely(() => collectDocuments(data, usedUrls));
+    site === 'immoscoop' || opts.includeDocuments === false
+      ? []
+      : safely(() => collectDocuments(data, usedUrls));
   const totalItems = photos.length + floorPlans.length + documents.length;
 
   let done = 0;
@@ -229,7 +238,7 @@ function safeDisplayTitle(info) {
   try {
     return displayTitle(info);
   } catch (error) {
-    return 'Immoweb listing ' + ((info && info.id) || '');
+    return ((info && info.source) || 'Listing') + ' ' + ((info && info.id) || '');
   }
 }
 
@@ -926,21 +935,510 @@ function normalize(data, payload) {
   };
 }
 
+/* ------------------------------------------------------------------ *
+ * Immoscoop
+ * ------------------------------------------------------------------ */
+
 /**
- * Used when `window.classified` is unavailable (page variants, partial loads):
- * build a lean record out of the DOM fallback instead of failing the save.
+ * Immoscoop is a Next.js app; `pageProps.property` carries the listing. It is
+ * shaped completely differently from Immoweb's: the numbers live in a flat
+ * `features` array plus prose detail groups ("Gebouw › Bouwjaar: 2017"), so
+ * everything numeric is parsed out of Dutch labels.
+ */
+const SCOOP_SIZE_KEYS = { extra: '1536', large: '1280', medium: '768', small: '320' };
+
+const SCOOP_TYPE_TOKENS = {
+  appartement: 'APARTMENT',
+  studio: 'STUDIO',
+  duplex: 'DUPLEX',
+  penthouse: 'PENTHOUSE',
+  loft: 'LOFT',
+  huis: 'HOUSE',
+  woning: 'HOUSE',
+  eengezinswoning: 'HOUSE',
+  villa: 'VILLA',
+  bungalow: 'BUNGALOW',
+  chalet: 'CHALET',
+  hoeve: 'FARMHOUSE',
+  kasteel: 'CASTLE',
+  grond: 'LAND',
+  bouwgrond: 'LAND',
+  garage: 'GARAGE',
+  parking: 'PARKING',
+  kantoor: 'OFFICE',
+  handelspand: 'RETAIL',
+  winkel: 'RETAIL',
+  magazijn: 'WAREHOUSE',
+  opbrengsteigendom: 'APARTMENT_BLOCK',
+  serviceflat: 'SERVICE_FLAT',
+  kot: 'STUDENT_APARTMENT',
+  // French labels, same site
+  maison: 'HOUSE',
+  terrain: 'LAND',
+  'maison de rapport': 'APARTMENT_BLOCK',
+};
+
+/**
+ * Immoscoop descriptions are HTML fragments (`<br />`, `<span><strong>…`), and
+ * the summary sheet plus the viewer both render plain text.
+ */
+function plainText(value) {
+  if (typeof value !== 'string') return null;
+  const text = value
+    .replace(/<\s*br\s*\/?\s*>/gi, '\n')
+    .replace(/<\/(p|div|li|h[1-6])>/gi, '\n')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&amp;/gi, '&')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+  return text || null;
+}
+
+/** Flattens `propertyDetailGroups` into [{ group, title, value }]. */
+function scoopDetails(property) {
+  const out = [];
+  for (const group of toArray(property && property.propertyDetailGroups)) {
+    const groupName = (group && group.group) || '';
+    for (const item of toArray(group && group.propertyDetails)) {
+      if (!item || typeof item !== 'object') continue;
+      const value = item.description === undefined || item.description === null
+        ? ''
+        : String(item.description).trim();
+      if (!value) continue;
+      out.push({ group: groupName, title: String(item.title || '').trim(), value });
+    }
+  }
+  return out;
+}
+
+/** First detail value whose title matches exactly, then by prefix. */
+function scoopDetail(details, title) {
+  const wanted = String(title).toLowerCase();
+  const exact = details.find((entry) => entry.title.toLowerCase() === wanted);
+  if (exact) return exact.value;
+  const prefixed = details.find((entry) => entry.title.toLowerCase().startsWith(wanted));
+  return prefixed ? prefixed.value : null;
+}
+
+/** "195 m²" → 195, "57" → 57, "1.250.000" → 1250000, "15 m²; 13 m²" → 15. */function scoopNumber(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (value === null || value === undefined || value === '') return null;
+  const text = String(value)
+    .replace(/\s/g, '')
+    .replace(/(\d)[.,](?=\d{3}\b)/g, '$1');
+  const match = /-?\d+(?:[.,]\d+)?/.exec(text);
+  if (!match) return null;
+  const number = Number(match[0].replace(',', '.'));
+  return Number.isFinite(number) ? number : null;
+}
+
+/** Every number in a list-ish string: "15 m²; 13 m²" → [15, 13]. */
+function scoopNumbers(value) {
+  if (value === null || value === undefined || value === '') return [];
+  return String(value)
+    .split(/[;,/]|\ben\b|\bet\b/)
+    .map((part) => scoopNumber(part))
+    .filter((number) => number !== null);
+}
+
+/** "Ja" → true, "Nee" → false, anything else → null. */
+function scoopFlag(value) {
+  if (value === true || value === false) return value;
+  const text = String(value === null || value === undefined ? '' : value).trim().toLowerCase();
+  if (!text) return null;
+  if (/^(ja|yes|oui)\b/.test(text)) return true;
+  if (/^(nee|neen|no|non)\b/.test(text)) return false;
+  return null;
+}
+
+/** Electrical certificates say "Ja, conform" / "Nee, niet conform". */
+function scoopConformity(value) {
+  const text = String(value === null || value === undefined ? '' : value).toLowerCase();
+  if (!text) return null;
+  if (/niet\s+conform|non\s+conforme/.test(text)) return false;
+  if (/conform/.test(text)) return true;
+  return null;
+}
+
+function scoopFeature(property, id) {
+  const entry = toArray(property && property.features).find(
+    (feature) => feature && String(feature.id).toLowerCase() === String(id).toLowerCase()
+  );
+  return entry ? entry.value : null;
+}
+
+function scoopNumberFromDetail(details, title) {
+  return scoopNumber(scoopDetail(details, title));
+}
+
+function scoopTypeToken(label) {
+  const text = String(label || '').trim().toLowerCase();
+  if (!text) return null;
+  if (SCOOP_TYPE_TOKENS[text]) return SCOOP_TYPE_TOKENS[text];
+  const first = text.split(/[\s/]+/)[0];
+  if (SCOOP_TYPE_TOKENS[first]) return SCOOP_TYPE_TOKENS[first];
+  return text.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '') || null;
+}
+
+function normalizeScoop(property, payload) {
+  const details = scoopDetails(property);
+  const detail = (title) => scoopDetail(details, title);
+  const kind = /(huur|louer|rent)/i.test(String((property.offerType && property.offerType.slug) || ''))
+    ? 'for-rent'
+    : 'for-sale';
+
+  const address = property.address || {};
+  const geo = address.geo || {};
+  const houseNumber = address.houseNumber || {};
+  const street = address.street ? String(address.street).trim() : null;
+  const number = houseNumber.number === undefined || houseNumber.number === null
+    ? null
+    : String(houseNumber.number);
+  const box = houseNumber.extension === undefined || houseNumber.extension === null
+    ? null
+    : String(houseNumber.extension);
+  const postalCode = address.postalCode === undefined || address.postalCode === null
+    ? null
+    : String(address.postalCode);
+  const locality =
+    (address.city && address.city.label) ||
+    (address.municipality && address.municipality.label) ||
+    null;
+
+  const rawType = (property.propertyType && property.propertyType.label) || null;
+  const typeToken = scoopTypeToken(rawType);
+  const rawSubtype =
+    detail('Subtype') ||
+    (Array.isArray(property.enhancedFeatureValues && property.enhancedFeatureValues.propertySubtypes)
+      ? toArray(property.enhancedFeatureValues.propertySubtypes)[0]
+      : null) ||
+    null;
+  const subtypeToken = rawSubtype ? scoopTypeToken(rawSubtype) : null;
+
+  const livingArea =
+    numberOrNull(scoopFeature(property, 'livableSurfaceArea')) ??
+    scoopNumberFromDetail(details, 'Bewoonbare oppervlakte');
+  const plotArea =
+    numberOrNull(scoopFeature(property, 'TerrainArea')) ??
+    scoopNumberFromDetail(details, 'Perceeloppervlakte');
+
+  const priceLabel = (property.price && property.price.label) || null;
+  const priceValue =
+    numberOrNull(property.price && property.price.slug) ?? scoopNumber(priceLabel);
+  const priceForPerSqm = kind === 'for-rent' ? priceValue : priceValue;
+
+  const heatingType = detail('Type verwarming');
+
+  const features = {};
+  const flag = (key, value) => {
+    if (value === true || value === false) features[key] = value;
+  };
+  flag('terrace', scoopFlag(detail('Terras')));
+  flag('lift', scoopFlag(detail('Lift')));
+  flag('basement', scoopFlag(detail('Kelder')));
+  flag('attic', scoopFlag(detail('Zolder')));
+  flag('garden', scoopFlag(detail('Tuin')));
+  flag('swimmingPool', scoopFlag(detail('Zwembad')));
+  flag('airConditioning', scoopFlag(detail('Airconditioning')));
+  flag('alarm', scoopFlag(detail('Alarm')));
+  flag('fitnessRoom', scoopFlag(detail('Fitnessruimte')));
+  flag('sauna', scoopFlag(detail('Sauna')));
+  flag('disabledAccess', scoopFlag(detail('Toegankelijk voor mindervaliden')));
+  flag('parking', scoopFlag(detail('Parking binnen')) ?? scoopFlag(scoopFeature(property, 'ParkingAvailable')));
+  features.specificities = details.map((entry) => entry.group + ' · ' + entry.title + ': ' + entry.value);
+
+  const agent = property.agent || {};
+  const hasAgent = Boolean(agent.name || agent.email || agent.phone);
+
+  return {
+    source: 'Immoscoop',
+    url: payload.url,
+    id: property.id || null,
+    externalReference:
+      property.canonicalId === undefined || property.canonicalId === null
+        ? null
+        : String(property.canonicalId),
+    cloudId: null,
+    capturedAt: payload.capturedAt || new Date().toISOString(),
+    language: property.descriptionLanguage || payload.lang || null,
+    transaction: {
+      type: (property.offerType && property.offerType.slug) || null,
+      typeLabel: kind === 'for-rent' ? 'For rent' : 'For sale',
+      subtype: null,
+      subtypeLabel: null,
+      kind,
+      availabilityDate: null,
+      availabilityPeriodType: null,
+      status: property.offline === true ? 'offline' : 'available',
+    },
+    price: {
+      display: priceLabel,
+      value: priceValue,
+      currency: 'EUR',
+      label: priceLabel,
+      oldValue: null,
+      oldDisplay: null,
+      hidden: priceValue === null,
+      pricePerSqm: null,
+      computedPricePerSqm:
+        priceForPerSqm !== null && livingArea ? Math.round(priceForPerSqm / livingArea) : null,
+      cadastralIncome: scoopNumberFromDetail(details, 'Kadastraal inkomen'),
+      subjectToVat: scoopFlag(detail('BTW van toepassing')),
+      isFurnished: kind === 'for-rent' ? scoopFlag(detail('Gemeubeld')) : null,
+      rent:
+        kind === 'for-rent'
+          ? {
+              monthly: priceValue,
+              monthlyCosts: scoopNumberFromDetail(details, 'Maandelijkse kosten'),
+              excludingCharges: scoopNumberFromDetail(details, 'Kosten (exclusief)'),
+              yearly: null,
+              furnished: scoopFlag(detail('Gemeubeld')),
+              smallPetsAllowed: scoopFlag(detail('Kleine huisdieren toegelaten')),
+              bigPetsAllowed: scoopFlag(detail('Grote huisdieren toegelaten')),
+            }
+          : null,
+    },
+    property: {
+      type: typeToken,
+      typeLabel: humanize(typeToken) || rawType,
+      subtype: subtypeToken,
+      subtypeLabel: humanize(subtypeToken) || rawSubtype,
+      typeRaw: rawType,
+      title: property.title || null,
+      name: null,
+      description: plainText(property.description),
+      descriptionTitle: property.descriptionTitle || null,
+      descriptionLanguage: property.descriptionLanguage || null,
+      livingArea,
+      plotArea,
+      plotWidth: scoopNumberFromDetail(details, 'Breedte perceel'),
+      plotUse: detail('Meest recente bestemming terrein'),
+      plotFlat: scoopFlag(detail('Vlak terrein')),
+      plotWooded: scoopFlag(detail('Bebost terrein')),
+      plotFacingStreet: scoopFlag(detail('Terrein grenst aan straat')),
+      plotToRear: null,
+      sewerConnection:
+        scoopFlag(detail('Aansluiting riolering')) === true
+          ? 'Connected'
+          : scoopFlag(detail('Aansluiting riolering')) === false
+            ? 'Not connected'
+            : null,
+      gardenArea: scoopNumberFromDetail(details, 'Oppervlakte tuin'),
+      gardenOrientation: detail('Oriëntatie tuin'),
+      terraceArea: scoopNumberFromDetail(details, 'Oppervlakte terras'),
+      terraceOrientation: detail('Oriëntatie terras'),
+      bedrooms:
+        numberOrNull(scoopFeature(property, 'BedroomNumber')) ??
+        scoopNumberFromDetail(details, 'Aantal slaapkamers'),
+      bedroomSurfaces: scoopNumbers(detail('Oppervlakte slaapkamers')),
+      bathrooms:
+        numberOrNull(scoopFeature(property, 'BathroomNumber')) ??
+        scoopNumberFromDetail(details, 'Aantal badkamers'),
+      bathroomsSurface: scoopNumberFromDetail(details, 'Oppervlakte badkamer'),
+      showerRooms: scoopNumberFromDetail(details, 'Aantal douchekamers'),
+      toilets: scoopNumberFromDetail(details, 'Aantal toiletten'),
+      rooms: scoopNumberFromDetail(details, 'Aantal leefruimtes'),
+      floor: scoopNumberFromDetail(details, 'Verdieping'),
+      floorCount: scoopNumberFromDetail(details, 'Aantal verdiepingen'),
+      constructionYear: scoopNumberFromDetail(details, 'Bouwjaar'),
+      condition: null,
+      conditionLabel: detail('Staat') || detail('Conditie'),
+      facadeCount: scoopNumberFromDetail(details, 'Aantal gevels'),
+      streetFacadeWidth: scoopNumberFromDetail(details, 'Breedte voorgevel'),
+      annexCount: scoopNumberFromDetail(details, 'Aantal bijgebouwen'),
+      heritageProtected: scoopFlag(detail('Beschermd erfgoed')),
+      basementSurface: scoopNumberFromDetail(details, 'Oppervlakte kelder'),
+      monthlyCosts: scoopNumberFromDetail(details, 'Maandelijkse kosten'),
+      habitableUnits: null,
+      kitchen: {
+        type: detail('Type keuken'),
+        typeLabel: detail('Type keuken'),
+        surface: scoopNumberFromDetail(details, 'Oppervlakte keuken'),
+        equipped: scoopFlag(detail('Keuken')),
+      },
+      livingRoomSurface: scoopNumberFromDetail(details, 'Oppervlakte leefruimte'),
+      parking: {
+        indoor: scoopNumberFromDetail(details, 'Parkeerplaatsen binnen'),
+        outdoor: scoopNumberFromDetail(details, 'Parkeerplaatsen buiten'),
+        closedBox: null,
+      },
+      features,
+    },
+    location: {
+      street,
+      number,
+      box,
+      postalCode,
+      locality,
+      district: null,
+      province: null,
+      region: (address.region && address.region.name) || null,
+      country: 'Belgium',
+      propertyName: null,
+      areaType: null,
+      surroundings: detail('Omgeving / buurt'),
+      floor: scoopNumberFromDetail(details, 'Verdieping'),
+      latitude: numberOrNull(geo.lat),
+      longitude: numberOrNull(geo.long),
+      seaView: scoopFlag(detail('Zeezicht')),
+      // Immoscoop hides the exact address on some listings (address.visible).
+      exact: Boolean(address.visible === true && (geo.lat || geo.lng)),
+      // Street-based, like Immoweb's; postal code and city have their own fields.
+      address:
+        [street, number, box && 'box ' + box].filter(Boolean).join(' ') || null,
+    },
+    energy: {
+      epcScore: scoopFeature(property, 'EpcClass') || detail('EPC-label') || null,
+      energyPerSqmYear: scoopNumberFromDetail(details, 'EPC-score (kWh/(m² jaar))'),
+      energyPerYear: null,
+      epcReference: detail('Unieke code EPC'),
+      epcValidUntil: detail('Vervaldatum EPC'),
+      carbonEmission: null,
+      renovationObligation: scoopFlag(detail('Renovatieverplichting')),
+      epcImageUrl: null,
+    },
+    heating: {
+      type: heatingType ? String(heatingType).toUpperCase().replace(/[^A-Z0-9]+/g, '_') : null,
+      typeLabel: heatingType || null,
+      heatPump: heatingType ? /warmtepomp|heat\s*pump|pompe\s*à\s*chaleur/i.test(heatingType) : null,
+      photovoltaicPanels: scoopFlag(detail('Zonnepanelen')),
+      thermicPanels: scoopFlag(detail('Zonneboiler')),
+      doubleGlazing: scoopFlag(detail('Dubbele beglazing')),
+      collectiveWaterHeater: scoopFlag(detail('Collectieve boiler')),
+      performance: null,
+    },
+    certificates: {
+      asbestosCertificate: scoopFlag(detail('Asbestattest')),
+      builtPlanStatus: detail('Stedenbouwkundige vergunning'),
+      oilTankCertificate: detail('Certificaat olietank'),
+      electricalCertificate: scoopConformity(detail('Keuringsattest elektriciteit')),
+      floodZoneLabel: detail('Overstromingsgevoelig gebied'),
+      urbanPlanningScore: detail('P(erceel)-score'),
+      buildingScore: detail('G(ebouw)-score'),
+      constructionPermitObtained: scoopFlag(detail('Bouwvergunning')),
+      renovationObligation: scoopFlag(detail('Renovatieverplichting')),
+    },
+    agency: hasAgent
+      ? [
+          {
+            name: agent.name || null,
+            type: 'AGENCY',
+            typeLabel: 'Agency',
+            phone: agent.phone || null,
+            mobile: null,
+            email: agent.email || null,
+            website: agent.website || null,
+            ipiNumber: null,
+            address: agent.address || null,
+            logo: (agent.logo && agent.logo.url) || null,
+            description: agent.description || null,
+          },
+        ]
+      : [],
+    publication: {
+      created: null,
+      lastModification: null,
+      expiration: property.scoopDeadline || null,
+    },
+    media: {
+      pictureCount: toArray(property.images).length,
+      floorPlanCount: 0,
+      documentCount: 0,
+      virtualTourUrl: null,
+      virtualExperienceUrl: null,
+      videoUrl: null,
+    },
+    flags: {
+      isNew: null,
+      isNewPrice: null,
+      isSoldOrRented: property.offline === true ? true : null,
+      isInvestmentProject: null,
+      isNotarySale: null,
+      isLifeAnnuitySale: null,
+      isPublicSale: null,
+      isNewlyBuilt: null,
+      isPrivateAd: property.isPrivateAd === true ? true : null,
+      isScoopDeal: property.scoop === true ? true : null,
+    },
+    investor:
+      property.enhancedFeatureValues && property.enhancedFeatureValues.isInvestmentProperty !== undefined
+        ? {
+            isInvestmentProperty: boolOrNull(property.enhancedFeatureValues.isInvestmentProperty),
+            currentMonthlyRentalIncome: null,
+            expectedMonthlyRentalIncome: null,
+            currentReturnOnInvestment: null,
+            expectedReturnOnInvestment: null,
+            occupancyRate: null,
+          }
+        : null,
+    // Every detail group, verbatim — the raw material for the summary sheet.
+    details: details.map((entry) => ({
+      group: entry.group,
+      title: entry.title,
+      value: entry.value,
+    })),
+    note:
+      address.visible === true
+        ? null
+        : 'Immoscoop does not publish the exact address of this listing, so the archive has no coordinates.',
+  };
+}
+
+/** Immoscoop photos carry a `sizes` map; pick the same size the user asked for. */
+function scoopPictureUrl(image, opts) {
+  if (!image) return null;
+  if (typeof image === 'string') return /^https?:/.test(image) ? image : null;
+  const sizes = image.sizes || {};
+  const preferred = SCOOP_SIZE_KEYS[opts.photoSize] || SCOOP_SIZE_KEYS.extra;
+  const order = [preferred, '1536', '1280', '1024', '768', '640', '320'];
+  for (const key of order) {
+    const value = sizes[key];
+    if (typeof value === 'string' && /^https?:/.test(value)) return value;
+  }
+  return typeof image.url === 'string' && /^https?:/.test(image.url) ? image.url : null;
+}
+
+function collectScoopPictures(data, payload, opts, usedUrls) {
+  const out = [];
+  const seen = usedUrls || new Set();
+  const push = (url) => {
+    if (!url || seen.has(url)) return;
+    seen.add(url);
+    out.push({ url });
+  };
+
+  for (const image of toArray(data && data.images)) push(scoopPictureUrl(image, opts));
+
+  if (!out.length && payload.fallback) {
+    if (payload.fallback.ogImage) push(payload.fallback.ogImage);
+    for (const url of toArray(payload.fallback.images)) push(url);
+  }
+
+  return out;
+}
+
+/**
+ * Used when the structured listing JSON is unavailable (page variants, partial
+ * loads): build a lean record out of the DOM fallback instead of failing.
  */
 function normalizeFallback(payload) {
   const fallback = payload.fallback || {};
+  const scoop = payload.site === 'immoscoop';
   return {
-    source: 'Immoweb',
+    source: scoop ? 'Immoscoop' : 'Immoweb',
     url: payload.url,
-    id: (/\/(\d{6,})(?:[/?#]|$)/.exec(payload.url || '') || [])[1] || null,
+    id: (/\/(\d{4,})(?:[/?#]|$)/.exec(payload.url || '') || [])[1] || null,
     capturedAt: payload.capturedAt || new Date().toISOString(),
     language: payload.lang || null,
     partial: true,
     transaction: {
-      kind: /for-rent|\/rent\//i.test(payload.url || '') ? 'for-rent' : 'for-sale',
+      kind: /for-rent|\/rent\/|te-huur|a-louer/i.test(payload.url || '') ? 'for-rent' : 'for-sale',
       type: null,
       typeLabel: null,
     },
@@ -1016,7 +1514,7 @@ function folderName(info) {
   const label = safeFilename(addressLabel(info));
   if (label.length >= 3) return label;
 
-  const id = info.id || 'immoweb';
+  const id = info.id || 'listing';
   const kind = (info.transaction && info.transaction.kind) || 'listing';
   const subtype = slugify(
     (info.property && (info.property.subtype || info.property.type)) || '',
@@ -1083,7 +1581,7 @@ function buildSummary(info) {
     push(headline.join(' — '));
     push();
   }
-  push('Immoweb listing ' + (info.id || '?') + ' · saved ' + (info.capturedAt || ''));
+  push((info.source || 'Immoweb') + ' listing ' + (info.id || '?') + ' · saved ' + (info.capturedAt || ''));
   if (info.url) push('<' + info.url + '>');
   push();
 
@@ -1104,7 +1602,7 @@ function buildSummary(info) {
   meta('Old price', price.oldDisplay || formatEuro(price.oldValue));
   meta('Cadastral income', formatEuro(price.cadastralIncome));
   yesNo('Subject to VAT', price.subjectToVat);
-  yesNo('Price hidden on Immoweb', price.hidden);
+  yesNo('Price hidden on the listing site', price.hidden);
   if (price.note) meta('Note', price.note);
   push();
 
@@ -1272,7 +1770,7 @@ function buildSummary(info) {
   }
 
   push('## Listing metadata');
-  meta('Immoweb ID', info.id);
+  meta((info.source || 'Immoweb') + ' ID', info.id);
   meta('External reference', info.externalReference);
   meta('Transaction type', info.transaction && (info.transaction.typeLabel || info.transaction.type));
   meta('Availability', info.transaction && info.transaction.availabilityDate);
@@ -1311,7 +1809,7 @@ function buildSummary(info) {
 
 function buildReadme(info, folder) {
   const lines = [
-    'Immoweb listing archive',
+    (info.source || 'Immoweb') + ' listing archive',
     '=======================',
     '',
     'Listing: ' + (info.displayTitle || (info.property && info.property.title) || info.id || ''),
@@ -1322,8 +1820,12 @@ function buildReadme(info, folder) {
     '-----------------------',
     'summary.md    Human-readable sheet: price, surfaces, rooms, EPC, description, agency.',
     'info.json     The same facts, normalised for scripts/spreadsheets.',
-    'listing.json  Raw listing data exactly as Immoweb embedded it in the page',
-    '              (window.classified) — the complete source of truth.',
+    info.source === 'Immoscoop'
+      ? 'listing.json  Raw listing data exactly as Immoscoop embedded it in the page'
+      : 'listing.json  Raw listing data exactly as Immoweb embedded it in the page',
+    info.source === 'Immoscoop'
+      ? '              (__NEXT_DATA__ › pageProps.property) — the full source of truth.'
+      : '              (window.classified) — the complete source of truth.',
     'photos/       All listing photos, numbered in display order.',
     'floorplans/   Floor plans, if the listing had any.',
     'documents/    Brochures, EPC certificates and other attachments, if any.',
@@ -1331,7 +1833,7 @@ function buildReadme(info, folder) {
     'download-errors.txt  Only present if some files could not be downloaded',
     '                     or a part of the data could not be read.',
     '',
-    "Note: prices, surfaces and other facts come from Immoweb and were accurate at",
+    "Note: prices, surfaces and other facts come from " + (info.source || 'Immoweb') + " and were accurate at",
     'the time of saving. Always verify with the agency before making decisions.',
     '',
   ];

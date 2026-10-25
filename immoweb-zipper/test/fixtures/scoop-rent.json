@@ -1,0 +1,480 @@
+{
+  "id": "1228194",
+  "title": "Appartement te huur in Antwerpen met 3 slaapkamers",
+  "h1Title": "Appartement te huur in Antwerpen met 3 slaapkamers",
+  "images": [
+    {
+      "url": "https://images.immoscoop.be/cp-fb99d120d1ee0bba94ecf9dc111e4ff0.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-fb99d120d1ee0bba94ecf9dc111e4ff0-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-fb99d120d1ee0bba94ecf9dc111e4ff0-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-fb99d120d1ee0bba94ecf9dc111e4ff0-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-fb99d120d1ee0bba94ecf9dc111e4ff0-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-fb99d120d1ee0bba94ecf9dc111e4ff0-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-fb99d120d1ee0bba94ecf9dc111e4ff0-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-a5ad8165c0c67c131de61b6a06b2fc80.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-a5ad8165c0c67c131de61b6a06b2fc80-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-a5ad8165c0c67c131de61b6a06b2fc80-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-a5ad8165c0c67c131de61b6a06b2fc80-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-a5ad8165c0c67c131de61b6a06b2fc80-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-a5ad8165c0c67c131de61b6a06b2fc80-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-a5ad8165c0c67c131de61b6a06b2fc80-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-7996903705bfb4380c6d729a6a9bd909.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-7996903705bfb4380c6d729a6a9bd909-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-7996903705bfb4380c6d729a6a9bd909-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-7996903705bfb4380c6d729a6a9bd909-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-7996903705bfb4380c6d729a6a9bd909-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-7996903705bfb4380c6d729a6a9bd909-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-7996903705bfb4380c6d729a6a9bd909-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-c5d02d1fcba45d5ac084520b589e7aa7.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-c5d02d1fcba45d5ac084520b589e7aa7-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-c5d02d1fcba45d5ac084520b589e7aa7-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-c5d02d1fcba45d5ac084520b589e7aa7-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-c5d02d1fcba45d5ac084520b589e7aa7-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-c5d02d1fcba45d5ac084520b589e7aa7-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-c5d02d1fcba45d5ac084520b589e7aa7-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-89a1cb1310477441c63f629b25d25420.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-89a1cb1310477441c63f629b25d25420-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-89a1cb1310477441c63f629b25d25420-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-89a1cb1310477441c63f629b25d25420-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-89a1cb1310477441c63f629b25d25420-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-89a1cb1310477441c63f629b25d25420-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-89a1cb1310477441c63f629b25d25420-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-9bef2b7ca2988f25ad9917a253a84842.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-9bef2b7ca2988f25ad9917a253a84842-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-9bef2b7ca2988f25ad9917a253a84842-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-9bef2b7ca2988f25ad9917a253a84842-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-9bef2b7ca2988f25ad9917a253a84842-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-9bef2b7ca2988f25ad9917a253a84842-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-9bef2b7ca2988f25ad9917a253a84842-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-827c64cbb92888875eb9c5824bcee088.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-827c64cbb92888875eb9c5824bcee088-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-827c64cbb92888875eb9c5824bcee088-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-827c64cbb92888875eb9c5824bcee088-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-827c64cbb92888875eb9c5824bcee088-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-827c64cbb92888875eb9c5824bcee088-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-827c64cbb92888875eb9c5824bcee088-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-aa7977d2d58facaceaec267e1de36530.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-aa7977d2d58facaceaec267e1de36530-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-aa7977d2d58facaceaec267e1de36530-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-aa7977d2d58facaceaec267e1de36530-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-aa7977d2d58facaceaec267e1de36530-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-aa7977d2d58facaceaec267e1de36530-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-aa7977d2d58facaceaec267e1de36530-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-c111fb6d68a3a74f8f3a020d114671d1.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-c111fb6d68a3a74f8f3a020d114671d1-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-c111fb6d68a3a74f8f3a020d114671d1-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-c111fb6d68a3a74f8f3a020d114671d1-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-c111fb6d68a3a74f8f3a020d114671d1-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-c111fb6d68a3a74f8f3a020d114671d1-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-c111fb6d68a3a74f8f3a020d114671d1-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-e90bed2fab5766f4a07395b4fafb476a.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-e90bed2fab5766f4a07395b4fafb476a-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-e90bed2fab5766f4a07395b4fafb476a-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-e90bed2fab5766f4a07395b4fafb476a-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-e90bed2fab5766f4a07395b4fafb476a-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-e90bed2fab5766f4a07395b4fafb476a-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-e90bed2fab5766f4a07395b4fafb476a-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-604418dde277ccbc8899672cea8c6114.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-604418dde277ccbc8899672cea8c6114-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-604418dde277ccbc8899672cea8c6114-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-604418dde277ccbc8899672cea8c6114-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-604418dde277ccbc8899672cea8c6114-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-604418dde277ccbc8899672cea8c6114-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-604418dde277ccbc8899672cea8c6114-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-2d024e150bd850c0e3cc2f1e59c7051b.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-2d024e150bd850c0e3cc2f1e59c7051b-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-2d024e150bd850c0e3cc2f1e59c7051b-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-2d024e150bd850c0e3cc2f1e59c7051b-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-2d024e150bd850c0e3cc2f1e59c7051b-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-2d024e150bd850c0e3cc2f1e59c7051b-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-2d024e150bd850c0e3cc2f1e59c7051b-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-0b2c466696c4f9df6681431371894ca4.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-0b2c466696c4f9df6681431371894ca4-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-0b2c466696c4f9df6681431371894ca4-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-0b2c466696c4f9df6681431371894ca4-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-0b2c466696c4f9df6681431371894ca4-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-0b2c466696c4f9df6681431371894ca4-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-0b2c466696c4f9df6681431371894ca4-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-b3bc2519ed3f28c34e16fc86a4cf5705.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-b3bc2519ed3f28c34e16fc86a4cf5705-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-b3bc2519ed3f28c34e16fc86a4cf5705-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-b3bc2519ed3f28c34e16fc86a4cf5705-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-b3bc2519ed3f28c34e16fc86a4cf5705-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-b3bc2519ed3f28c34e16fc86a4cf5705-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-b3bc2519ed3f28c34e16fc86a4cf5705-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-cefedc5e51a7081f774190ad7522e23a.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-cefedc5e51a7081f774190ad7522e23a-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-cefedc5e51a7081f774190ad7522e23a-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-cefedc5e51a7081f774190ad7522e23a-w768.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-593350a4cc66cba04d8d8c8c173e06d2.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-593350a4cc66cba04d8d8c8c173e06d2-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-593350a4cc66cba04d8d8c8c173e06d2-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-593350a4cc66cba04d8d8c8c173e06d2-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-593350a4cc66cba04d8d8c8c173e06d2-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-593350a4cc66cba04d8d8c8c173e06d2-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-593350a4cc66cba04d8d8c8c173e06d2-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-6512f49763e0b5ee62308846ea740997.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-6512f49763e0b5ee62308846ea740997-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-6512f49763e0b5ee62308846ea740997-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-6512f49763e0b5ee62308846ea740997-w768.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-0e0e3a582c3c7fb3bbd6ff80cee53776.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-0e0e3a582c3c7fb3bbd6ff80cee53776-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-0e0e3a582c3c7fb3bbd6ff80cee53776-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-0e0e3a582c3c7fb3bbd6ff80cee53776-w768.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-1b8fd01bf1cb9583d783b544601ff001.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-1b8fd01bf1cb9583d783b544601ff001-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-1b8fd01bf1cb9583d783b544601ff001-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-1b8fd01bf1cb9583d783b544601ff001-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-1b8fd01bf1cb9583d783b544601ff001-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-1b8fd01bf1cb9583d783b544601ff001-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-1b8fd01bf1cb9583d783b544601ff001-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-a47d6dcc42cc2772577fef001145eb39.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-a47d6dcc42cc2772577fef001145eb39-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-a47d6dcc42cc2772577fef001145eb39-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-a47d6dcc42cc2772577fef001145eb39-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-a47d6dcc42cc2772577fef001145eb39-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-a47d6dcc42cc2772577fef001145eb39-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-a47d6dcc42cc2772577fef001145eb39-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-e2d682f791bea32eff566d624a9fd645.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-e2d682f791bea32eff566d624a9fd645-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-e2d682f791bea32eff566d624a9fd645-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-e2d682f791bea32eff566d624a9fd645-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-e2d682f791bea32eff566d624a9fd645-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-e2d682f791bea32eff566d624a9fd645-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-e2d682f791bea32eff566d624a9fd645-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-48f43b4c9d08828da25ac9d2d9bcab54.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-48f43b4c9d08828da25ac9d2d9bcab54-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-48f43b4c9d08828da25ac9d2d9bcab54-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-48f43b4c9d08828da25ac9d2d9bcab54-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-48f43b4c9d08828da25ac9d2d9bcab54-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-48f43b4c9d08828da25ac9d2d9bcab54-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-48f43b4c9d08828da25ac9d2d9bcab54-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-1403968abce2f22c4ffe3b20491d70a5.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-1403968abce2f22c4ffe3b20491d70a5-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-1403968abce2f22c4ffe3b20491d70a5-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-1403968abce2f22c4ffe3b20491d70a5-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-1403968abce2f22c4ffe3b20491d70a5-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-1403968abce2f22c4ffe3b20491d70a5-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-1403968abce2f22c4ffe3b20491d70a5-w1536.jpeg"
+      }
+    },
+    {
+      "url": "https://images.immoscoop.be/cp-1bc9d5f6e4bcb2591489b69753c35552.jpg",
+      "sizes": {
+        "320": "https://images.immoscoop.be/cp-1bc9d5f6e4bcb2591489b69753c35552-w320.jpeg",
+        "640": "https://images.immoscoop.be/cp-1bc9d5f6e4bcb2591489b69753c35552-w640.jpeg",
+        "768": "https://images.immoscoop.be/cp-1bc9d5f6e4bcb2591489b69753c35552-w768.jpeg",
+        "1024": "https://images.immoscoop.be/cp-1bc9d5f6e4bcb2591489b69753c35552-w1024.jpeg",
+        "1280": "https://images.immoscoop.be/cp-1bc9d5f6e4bcb2591489b69753c35552-w1280.jpeg",
+        "1536": "https://images.immoscoop.be/cp-1bc9d5f6e4bcb2591489b69753c35552-w1536.jpeg"
+      }
+    }
+  ],
+  "address": {
+    "displayMunicipality": false,
+    "visible": true,
+    "postalCode": 2050,
+    "city": {
+      "id": "247",
+      "label": "Antwerpen",
+      "slug": "2050-antwerpen"
+    },
+    "municipality": {
+      "id": "20",
+      "label": "Antwerpen",
+      "slug": "antwerpen"
+    },
+    "region": {
+      "id": 1,
+      "name": "Flanders"
+    },
+    "street": "Aalscholverlaan ",
+    "houseNumber": {
+      "number": 78,
+      "extension": "802"
+    },
+    "geo": {
+      "lat": 51.21728,
+      "long": 4.371386
+    }
+  },
+  "features": [
+    {
+      "id": "EpcClass",
+      "title": "EPC-label",
+      "value": "A"
+    },
+    {
+      "id": "livableSurfaceArea",
+      "title": "Bewoonbare oppervlakte (m²)",
+      "value": "140",
+      "unit": "m²"
+    },
+    {
+      "id": "BedroomNumber",
+      "title": "Aantal slaapkamers",
+      "value": "3"
+    },
+    {
+      "id": "BathroomNumber",
+      "title": "Aantal badkamers",
+      "value": "2"
+    },
+    {
+      "id": "ParkingAvailable",
+      "title": "Garage / Autostaanplaats",
+      "value": "true"
+    },
+    {
+      "id": "Terrace",
+      "title": "Terras",
+      "value": "true"
+    }
+  ],
+  "propertyDetailGroups": [
+    {
+      "group": "Gebouw",
+      "propertyDetails": [
+        {
+          "description": "Appartement",
+          "title": "Type pand"
+        },
+        {
+          "description": "Penthouse",
+          "title": "Subtype"
+        },
+        {
+          "description": "140 m²",
+          "title": "Bewoonbare oppervlakte"
+        },
+        {
+          "description": "Open",
+          "title": "Type bebouwing"
+        },
+        {
+          "description": "4",
+          "title": "Aantal gevels"
+        },
+        {
+          "description": "2017",
+          "title": "Bouwjaar"
+        },
+        {
+          "description": "8",
+          "title": "Verdieping"
+        },
+        {
+          "description": "Ja",
+          "title": "Garage"
+        },
+        {
+          "description": "Ja",
+          "title": "Parking binnen"
+        }
+      ]
+    },
+    {
+      "group": "Indeling",
+      "propertyDetails": [
+        {
+          "description": "3",
+          "title": "Aantal slaapkamers"
+        },
+        {
+          "description": "2",
+          "title": "Aantal badkamers"
+        },
+        {
+          "description": "Ja",
+          "title": "Terras"
+        },
+        {
+          "description": "1",
+          "title": "Aantal terrassen"
+        },
+        {
+          "description": "Ja",
+          "title": "Kelder"
+        }
+      ]
+    },
+    {
+      "group": "Comfort",
+      "propertyDetails": [
+        {
+          "description": "Nee",
+          "title": "Zwembad"
+        }
+      ]
+    },
+    {
+      "group": "Energie",
+      "propertyDetails": [
+        {
+          "description": "98",
+          "title": "EPC-score (kWh/(m² jaar))"
+        },
+        {
+          "description": "A",
+          "title": "EPC-label"
+        },
+        {
+          "description": "11002-G-2014_165880/EP12502/B002/D01/SD017",
+          "title": "Unieke code EPC"
+        },
+        {
+          "description": "28-08-2027",
+          "title": "Vervaldatum EPC"
+        },
+        {
+          "description": "Ja",
+          "title": "Dubbele beglazing"
+        },
+        {
+          "description": "Ja, conform",
+          "title": "Keuringsattest elektriciteit"
+        },
+        {
+          "description": "Gas",
+          "title": "Type verwarming"
+        }
+      ]
+    }
+  ],
+  "propertyType": {
+    "id": "2",
+    "label": "Appartement",
+    "slug": "appartement"
+  },
+  "offerType": {
+    "id": "2",
+    "label": "Te Huur",
+    "slug": "te-huur"
+  },
+  "relatedSearch": {
+    "offerType": "te-huur",
+    "propertyTypes": "appartement",
+    "locations": "2050-antwerpen"
+  },
+  "agent": {
+    "phone": null,
+    "name": "Makelaarskantoor De Meester - Verhuur",
+    "email": null,
+    "id": "1629",
+    "website": null,
+    "address": null,
+    "description": null,
+    "logo": null
+  },
+  "isPrivateAd": false,
+  "offline": false,
+  "showContactForm": true,
+  "price": {
+    "label": "€ 2.200",
+    "slug": "2200"
+  },
+  "transactionType": "FIXED",
+  "canonicalId": "1228194",
+  "scoop": false,
+  "scoopDeadline": null,
+  "link": "https://www.demeester.eu/vastgoed/7880635/mailing",
+  "metaTitle": "Appartement te huur in Antwerpen voor € 2.200 | Immoscoop",
+  "description": "<p>Een adembenemend uitzicht over het Galgenweel en de skyline van Antwerpen, een lumineuze penthouse die grote rust uitstraalt.<br /><br />Een open inkomhal met ingemaakte kasten.<br />De leefruimte geeft via de grote schuifpuien toegang tot een zonovergoten terras.<br />De keuken voorzien van alle comfort met aansluitend een berging.<br />De master bedroom is achteraan gelegen en is uitgerust met ingemaakte kasten en ensuite badkamer met ligbad, lavabomeubel en toilet. Een klein terras.<br />De tweede slaapkamer is wederom voorzien van kamerhoge ingemaakte kasten en een aparte douchekamer met lavabomeubel en douche. <br />Overal parketvloeren. Apart toilet.<br />Verder een aangename bureauruimte met terras. Hier kan indien gewenst nog een derde slaapkamer van gemaakt worden.<br />Ondergronds geniet u van een grote garagebox en een kelderberging.</p>",
+  "descriptionLanguage": "nl",
+  "enhancedFeatureValues": {
+    "propertySubtypes": [
+      "PENTHOUSE"
+    ],
+    "isInvestmentProperty": false
+  },
+  "descriptionTitle": ""
+}

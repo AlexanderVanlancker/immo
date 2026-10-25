@@ -89,6 +89,7 @@ export function createListView(root: HTMLElement, options: ListViewOptions): Lis
           ),
           el('div', { class: 'card-foot' }, [
             el('span', { text: `Saved ${date(savedAt)}` }),
+            el('span', { class: 'pill source', text: listing.source }),
             listing.flags.isSoldOrRented ? el('span', { class: 'pill sold', text: 'Sold / rented' }) : null,
             listing.flags.isNewPrice ? el('span', { class: 'pill warn', text: 'New price' }) : null,
             listing.address.lat === null ? el('span', { class: 'pill warn', text: 'No map pin' }) : null,
@@ -108,7 +109,7 @@ export function createListView(root: HTMLElement, options: ListViewOptions): Lis
         el('p', {
           text:
             totalCount === 0
-              ? 'Save a listing with the Immoweb Zipper extension (ZIP downloads folder), drop the ZIP into data/exports/ and reload this page.'
+              ? 'Save a listing with the Listing Zipper extension (Immoweb or Immoscoop), drop the ZIP into data/exports/ and reload this page.'
               : 'Loosen a filter, or clear them all to see every saved listing again.',
         }),
       ]),

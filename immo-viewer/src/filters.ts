@@ -4,6 +4,8 @@ export type TransactionFilter = 'all' | 'for-sale' | 'for-rent'
 
 export interface FilterState {
   transaction: TransactionFilter
+  /** Source sites, e.g. `Immoweb`, `Immoscoop`. Empty means "any". */
+  sources: string[]
   /** Property types, e.g. `house`, `apartment`. Empty means "any". */
   types: string[]
   /** EPC labels, e.g. `A`, `B`. Empty means "any". */
@@ -56,6 +58,7 @@ export const FEATURE_FILTERS: FeatureFilter[] = [
 export function defaultFilters(): FilterState {
   return {
     transaction: 'all',
+    sources: [],
     types: [],
     epc: [],
     postalCodes: [],
@@ -103,10 +106,12 @@ export function applyFilters(listings: Listing[], filters: FilterState): Listing
   const types = new Set(filters.types)
   const epc = new Set(filters.epc)
   const postalCodes = new Set(filters.postalCodes)
+  const sources = new Set(filters.sources)
 
   return listings.filter((listing) => {
     if (!filters.includeSold && listing.flags.isSoldOrRented) return false
     if (filters.transaction !== 'all' && listing.transaction.kind !== filters.transaction) return false
+    if (sources.size > 0 && !sources.has(listing.source)) return false
     if (types.size > 0 && !(listing.propertyType && types.has(listing.propertyType))) return false
     if (epc.size > 0 && !(listing.energy.label && epc.has(listing.energy.label))) return false
     if (
@@ -135,6 +140,7 @@ export function activeFilterCount(filters: FilterState): number {
   const defaults = defaultFilters()
   let count = 0
   if (filters.transaction !== defaults.transaction) count++
+  if (filters.sources.length) count++
   if (filters.types.length) count++
   if (filters.epc.length) count++
   if (filters.postalCodes.length) count++
@@ -148,6 +154,7 @@ export function activeFilterCount(filters: FilterState): number {
 }
 
 export interface Facets {
+  sources: { value: string; count: number }[]
   types: { value: string; label: string; count: number }[]
   epc: { value: string; count: number }[]
   postalCodes: { value: string; label: string; count: number }[]
@@ -157,6 +164,7 @@ export interface Facets {
 
 /** Counts computed over the *unfiltered* data so the chips never disappear. */
 export function computeFacets(listings: Listing[]): Facets {
+  const sourceCounts = new Map<string, number>()
   const typeCounts = new Map<string, { label: string; count: number }>()
   const epcCounts = new Map<string, number>()
   const postalCounts = new Map<string, { label: string; count: number }>()
@@ -166,6 +174,7 @@ export function computeFacets(listings: Listing[]): Facets {
   let livingMax = -Infinity
 
   for (const listing of listings) {
+    sourceCounts.set(listing.source, (sourceCounts.get(listing.source) ?? 0) + 1)
     if (listing.propertyType) {
       const existing = typeCounts.get(listing.propertyType)
       typeCounts.set(listing.propertyType, {
@@ -199,6 +208,9 @@ export function computeFacets(listings: Listing[]): Facets {
   }
 
   return {
+    sources: [...sourceCounts.entries()]
+      .map(([value, count]) => ({ value, count }))
+      .sort((a, b) => b.count - a.count || a.value.localeCompare(b.value)),
     types: [...typeCounts.entries()]
       .map(([value, info]) => ({ value, label: info.label, count: info.count }))
       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
@@ -224,6 +236,7 @@ export function filtersToHash(filters: FilterState): string {
   const params = new URLSearchParams()
   const defaults = defaultFilters()
   if (filters.transaction !== defaults.transaction) params.set('tx', filters.transaction)
+  if (filters.sources.length) params.set('src', filters.sources.join(','))
   if (filters.types.length) params.set('type', filters.types.join(','))
   if (filters.epc.length) params.set('epc', filters.epc.join(','))
   if (filters.postalCodes.length) params.set('pc', filters.postalCodes.join(','))
@@ -249,6 +262,7 @@ export function filtersFromHash(hash: string): FilterState {
       .map((value) => value.trim())
       .filter(Boolean)
   filters.types = list('type')
+  filters.sources = list('src')
   filters.epc = list('epc')
   filters.postalCodes = list('pc')
   filters.features = list('feat')

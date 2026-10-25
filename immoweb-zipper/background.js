@@ -1,10 +1,13 @@
 'use strict';
 
+importScripts('sites.js');
+
 /**
- * Immoweb Listing Zipper — service worker.
+ * Listing Zipper — service worker.
  *
  * Responsibilities:
- *  1. Read `window.classified` (Immoweb's full listing JSON) out of the active tab.
+ *  1. Read the listing JSON out of the active tab: `window.classified` on
+ *     Immoweb, `<script id="__NEXT_DATA__">` on Immoscoop.
  *  2. Hand the payload to the offscreen document, which downloads the photos and
  *     assembles the ZIP (offscreen documents live long enough for a multi-MB job
  *     and can create the blob URL the downloads API needs).
@@ -106,6 +109,7 @@ async function closeOffscreenDocument(blobUrl) {
  * self-contained (no closures over this file).
  */
 function readListing(wantHtml) {
+  const isScoop = /(^|\.)immoscoop\.be$/i.test(location.hostname);
   const text = (selector) => {
     const el = document.querySelector(selector);
     if (!el) return null;
@@ -120,29 +124,48 @@ function readListing(wantHtml) {
   };
 
   const payload = {
+    site: isScoop ? 'immoscoop' : 'immoweb',
     url: location.href,
     lang: document.documentElement.lang || null,
     capturedAt: new Date().toISOString(),
     title: document.title || null,
     classified: null,
+    scoop: null,
     fallback: null,
     html: null,
   };
 
-  try {
-    const raw = window.classified;
-    if (raw && typeof raw === 'object' && raw.id) {
-      // Round-trip so anything non-serialisable is dropped before messaging.
-      payload.classified = JSON.parse(JSON.stringify(raw));
-      payload.lang = (raw.price && raw.price.language) || payload.lang;
+  if (isScoop) {
+    // Immoscoop is a Next.js app: the whole property lives in __NEXT_DATA__.
+    try {
+      const node = document.getElementById('__NEXT_DATA__');
+      const json = node && node.textContent ? JSON.parse(node.textContent) : null;
+      const property =
+        json && json.props && json.props.pageProps && json.props.pageProps.property;
+      if (property && property.id) {
+        // Round-trip so anything non-serialisable is dropped before messaging.
+        payload.scoop = JSON.parse(JSON.stringify(property));
+        payload.lang = property.descriptionLanguage || payload.lang;
+      }
+    } catch (error) {
+      /* fall through to the DOM fallback */
     }
-  } catch (error) {
-    /* fall through to the DOM fallback */
+  } else {
+    try {
+      const raw = window.classified;
+      if (raw && typeof raw === 'object' && raw.id) {
+        payload.classified = JSON.parse(JSON.stringify(raw));
+        payload.lang = (raw.price && raw.price.language) || payload.lang;
+      }
+    } catch (error) {
+      /* fall through to the DOM fallback */
+    }
   }
 
-  const images = Array.from(
-    document.querySelectorAll('img[src*="immowebstatic"], img[src*="immoweb.be/photos"]')
-  )
+  const selector = isScoop
+    ? 'img[src*="images.immoscoop"], img[src*="immoscoop.be"]'
+    : 'img[src*="immowebstatic"], img[src*="immoweb.be/photos"]';
+  const images = Array.from(document.querySelectorAll(selector))
     .map((img) => img.currentSrc || img.src)
     .filter((src) => src && /^https?:/.test(src));
 
@@ -172,8 +195,13 @@ async function extractFromTab(tabId, options) {
   if (!payload) {
     throw new Error('Could not read this page. Open the listing itself, then try again.');
   }
-  if (!payload.classified && !(payload.fallback && payload.fallback.title)) {
-    throw new Error('This page does not look like an Immoweb listing.');
+  if (!payload.classified && !payload.scoop && !(payload.fallback && payload.fallback.title)) {
+    const site = siteForUrl(payload.url);
+    throw new Error(
+      site
+        ? 'This page does not look like a ' + site.label + ' listing.'
+        : 'This page does not look like an Immoweb or Immoscoop listing.'
+    );
   }
   return payload;
 }

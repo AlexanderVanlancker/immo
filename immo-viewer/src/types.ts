@@ -129,6 +129,8 @@ export interface Listing {
   zipFile: string
   immowebId: number | null
   externalReference: string | null
+  /** Which site the archive came from: `Immoweb` or `Immoscoop`. */
+  source: string
   url: string | null
   title: string
   /** ISO timestamp of the moment the extension saved the listing. */

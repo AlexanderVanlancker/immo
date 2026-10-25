@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Immoweb Listing Zipper",
-  "version": "1.0.2",
-  "description": "Save an Immoweb listing (for sale or for rent) as a ZIP with price, description, surfaces, EPC and every photo.",
+  "name": "Listing Zipper — Immoweb & Immoscoop",
+  "version": "1.1.0",
+  "description": "Save an Immoweb or Immoscoop listing (for sale or for rent) as a ZIP with price, description, surfaces, EPC and every photo.",
   "minimum_chrome_version": "116",
   "permissions": [
     "activeTab",
@@ -16,13 +16,16 @@
     "https://*.immoweb.be/*",
     "https://*.immowebstatic.be/*",
     "https://*.immoweb.com/*",
-    "https://*.immowebstatic.com/*"
+    "https://*.immowebstatic.com/*",
+    "https://immoscoop.be/*",
+    "https://*.immoscoop.be/*",
+    "https://images.immoscoop.be/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Save this Immoweb listing as ZIP",
+    "default_title": "Save this listing as ZIP",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

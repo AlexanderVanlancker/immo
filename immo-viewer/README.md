@@ -16,11 +16,17 @@ Nothing is written back: the archives stay exactly as the extension saved them.
 
 ## What you get
 
-**List + filters.** Transaction type, property type, location, EPC label, price, €/m²,
-living area, plot size, bedrooms, must-have features, and free-text search across address,
-city, agency, Immoweb ID, reference and description. Filters live in the URL hash, so a
-filtered view can be bookmarked. `Filters` collapses; the count badge shows how many are
-active.
+**List + filters.** Transaction type, source site (Immoweb / Immoscoop), property type,
+location, EPC label, price, €/m², living area, plot size, bedrooms, must-have features, and
+free-text search across address, city, agency, source site, listing id, reference and
+description. Filters live in the URL hash, so a filtered view can be bookmarked. `Filters`
+collapses; the count badge shows how many are active.
+
+**Listings from more than one site.** Every archive records where it came from
+(`info.json › source`). Cards carry a small source pill, the detail panel names it, and the
+`Source` filter group appears as soon as two sites are present. Listings without coordinates
+(Immoscoop hides the address on some of them) still appear in the list with a `No map pin`
+pill — they are simply left out of the map.
 
 **Map.** MapLibre GL with a price pill per listing, auto-fitted to whatever the filters
 return. Hovering a card highlights its pin and vice versa; clicking either opens the detail
@@ -29,8 +35,8 @@ an OpenStreetMap raster fallback if that style cannot be loaded.
 
 **Detail panel.** Full photo gallery from the archive (arrow keys work), price and €/m²,
 around 25 property facts, energy certificate details, comfort features, description, agency,
-an OpenStreetMap link, floor-plan links, a link back to the Immoweb page and a download of the
-original ZIP.
+an OpenStreetMap link, floor-plan links, a link back to the original listing page and a
+download of the original ZIP.
 
 **Stats.** KPIs (count, median price, median €/m², median living area, geocoded share) plus
 six charts, all computed over the *currently filtered* set:
