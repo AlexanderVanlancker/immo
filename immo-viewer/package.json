@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Map, list and stats view for the Immoweb listings saved as ZIP by the Immoweb Listing Zipper.",
+  "description": "Map, list and stats view for the property listings saved by Listing Zipper.",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
@@ -12,6 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "smoke": "node test/smoke.mjs",
+    "unpack": "node scripts/unpack.ts",
     "start": "vite"
   },
   "dependencies": {

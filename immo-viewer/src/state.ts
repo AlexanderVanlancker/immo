@@ -5,7 +5,7 @@ import {
   filtersToHash,
   type FilterState,
 } from './filters'
-import type { Listing, ScanError } from './types'
+import type { ImportReport, Listing, ScanError } from './types'
 
 export type SortKey =
   | 'price-asc'
@@ -45,7 +45,12 @@ export interface AppState {
   sort: SortKey
   view: View
   filters: FilterState
-  meta: { scannedAt: string; sourceDir: string; errors: ScanError[] } | null
+  meta: {
+    scannedAt: string
+    sourceDir: string
+    errors: ScanError[]
+    imported?: ImportReport | null
+  } | null
 }
 
 type Listener = (state: AppState, reason: ChangeReason) => void
@@ -117,7 +122,10 @@ export class Store {
     return () => this.listeners.delete(listener)
   }
 
-  setListings(listings: Listing[], meta: { scannedAt: string; sourceDir: string; errors: ScanError[] }): void {
+  setListings(
+    listings: Listing[],
+    meta: { scannedAt: string; sourceDir: string; errors: ScanError[]; imported?: ImportReport | null },
+  ): void {
     this.state = {
       ...this.state,
       status: 'ready',

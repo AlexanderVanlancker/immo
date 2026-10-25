@@ -11,8 +11,9 @@ exactly like an Immoweb one.
 Everything runs locally in your browser. Nothing is uploaded anywhere.
 
 > **Part of [`immo`](../README.md).** Drop the ZIPs this extension produces into
-> `../data/exports/`, then run [`immo-viewer`](../immo-viewer) to browse them on a map, filter
-> and search them, and see price-per-m² statistics.
+> `../data/exports/`. [`immo-viewer`](../immo-viewer) unpacks them into `../data/listings/`
+> (one plain folder per listing) and turns them into a map, a filterable list and
+> price-per-m² statistics.
 
 ## Install (unpacked)
 

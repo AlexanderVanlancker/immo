@@ -1,4 +1,4 @@
-import { archiveUrl, photoUrl } from './api'
+import { photoUrl } from './api'
 import { clear, el } from './dom'
 import { epcColor } from './epc'
 import { date, euro, euroPerSqm, plural, squareMetres } from './format'
@@ -191,4 +191,3 @@ export function createListView(root: HTMLElement, options: ListViewOptions): Lis
 }
 
 /** The ZIP download link reused by the detail panel. */
-export { archiveUrl }

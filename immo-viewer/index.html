@@ -61,6 +61,19 @@
         <div id="map" class="map"></div>
         <div id="stats" class="stats" hidden></div>
         <aside id="detail" class="detail" hidden aria-label="Listing details"></aside>
+
+        <div id="picker" class="picker" hidden role="dialog" aria-live="polite">
+          <div class="picker-text">
+            <strong id="picker-title">Place this listing on the map</strong>
+            <span id="picker-hint">Click the map where it is · Esc to cancel</span>
+          </div>
+          <div class="picker-actions">
+            <button id="picker-save" class="action primary" type="button" hidden>Save location</button>
+            <button id="picker-cancel" class="action" type="button">Cancel</button>
+          </div>
+        </div>
+
+        <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
       </section>
     </main>
 

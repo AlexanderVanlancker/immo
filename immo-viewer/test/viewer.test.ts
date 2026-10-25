@@ -21,7 +21,7 @@ const photos = [
 function sale(): Listing {
   return normaliseListing({
     key: 'sale-key',
-    zipFile: 'Example Street 5  2000 — Antwerpen.zip',
+    folder: 'Example Street 5  2000 — Antwerpen',
     info: saleFixture as Record<string, unknown>,
     photos,
     floorPlans: [{ name: 'floorplans/01.pdf', bytes: 10 }],
@@ -32,7 +32,7 @@ function sale(): Listing {
 function rent(): Listing {
   return normaliseListing({
     key: 'rent-key',
-    zipFile: 'Example 1  2050 — Antwerpen.zip',
+    folder: 'Example 1  2050 — Antwerpen',
     info: rentFixture as Record<string, unknown>,
     photos: [],
     floorPlans: [],
@@ -71,7 +71,7 @@ describe('normaliseListing', () => {
     ;(info.price as Record<string, unknown>).computedPricePerSqm = null
     const recomputed = normaliseListing({
       key: 'k',
-      zipFile: 'x.zip',
+      folder: 'x',
       info,
       photos: [],
       floorPlans: [],
@@ -106,7 +106,7 @@ describe('normaliseListing', () => {
   it('survives a completely empty payload', () => {
     const listing = normaliseListing({
       key: 'empty',
-      zipFile: 'empty.zip',
+      folder: 'empty',
       info: {},
       photos: [],
       floorPlans: [],
@@ -152,7 +152,7 @@ describe('filters', () => {
   it('filters by source site and counts the facet', () => {
     const immoscoop = normaliseListing({
       key: 'scoop-key',
-      zipFile: 'Aalscholverlaan 78 box 802  2050 — Antwerpen.zip',
+      folder: 'Aalscholverlaan 78 box 802  2050 — Antwerpen',
       info: { ...(rentFixture as Record<string, unknown>), source: 'Immoscoop' },
       photos: [],
       floorPlans: [],
@@ -207,7 +207,7 @@ describe('facets', () => {
   const mixed = () => {
     const scoop = normaliseListing({
       key: 'scoop-key',
-      zipFile: 'Aalscholverlaan 78 box 802  2050 — Antwerpen.zip',
+      folder: 'Aalscholverlaan 78 box 802  2050 — Antwerpen',
       info: { ...(rentFixture as Record<string, unknown>), source: 'Immoscoop' },
       photos: [],
       floorPlans: [],

@@ -1,16 +1,18 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 import './styles.css'
 
-import { fetchListings } from './api'
+import { fetchListings, saveLocation } from './api'
 import { DetailView } from './detailView'
 import { debounce } from './dom'
 import { activeFilterCount, computeFacets, describeFilters, filtersToHash, type Facets } from './filters'
 import { createFiltersView } from './filtersView'
 import { createListView } from './listView'
+import { reverseGeocode, type GeocodeResult } from './geocode'
 import { MapView } from './mapView'
 import { SORT_OPTIONS, Store, type SortKey } from './state'
 import { createStatsView } from './statsView'
 import type { AppState, ChangeReason } from './state'
+import type { Listing } from './types'
 
 const $ = <T extends HTMLElement>(id: string): T => {
   const node = document.getElementById(id)
@@ -29,6 +31,12 @@ const resultsRoot = $('results')
 const resultCount = $('result-count')
 const statsRoot = $('stats')
 const detailRoot = $('detail')
+const pickerNode = $('picker')
+const pickerTitle = $('picker-title')
+const pickerHint = $('picker-hint')
+const pickerSave = $<HTMLButtonElement>('picker-save')
+const pickerCancel = $<HTMLButtonElement>('picker-cancel')
+const toastNode = $('toast')
 const tabs = [...document.querySelectorAll<HTMLButtonElement>('.tab')]
 
 const store = new Store()
@@ -55,6 +63,7 @@ const mapView = new MapView($('map'), {
 
 const detailView = new DetailView(detailRoot, {
   onClose: () => store.select(null),
+  onLocate: (listing) => startLocating(listing),
 })
 
 const filtersView = createFiltersView(filtersRoot, {
@@ -65,6 +74,117 @@ const filtersView = createFiltersView(filtersRoot, {
 const statsView = createStatsView(statsRoot, {
   onSelect: (key) => selectListing(key),
 })
+
+/* ------------------------------------------------------------------ *
+ * Placing a listing on the map (writes info.json inside the archive)
+ * ------------------------------------------------------------------ */
+
+interface PendingPin {
+  listing: Listing
+  lat: number
+  lon: number
+  geocode: GeocodeResult | null
+}
+
+let pendingPin: PendingPin | null = null
+/** The listing being located, so cancelling can reopen its panel. */
+let pickListing: Listing | null = null
+let toastTimer: number | undefined
+
+function showToast(message: string, isError = false): void {
+  toastNode.textContent = message
+  toastNode.classList.toggle('is-error', isError)
+  toastNode.hidden = false
+  window.clearTimeout(toastTimer)
+  toastTimer = window.setTimeout(() => {
+    toastNode.hidden = true
+  }, isError ? 8000 : 4000)
+}
+
+function startLocating(listing: Listing): void {
+  pickListing = listing
+  store.setView('map')
+  // Get the detail panel out of the way: it covers a third of the map, and every
+  // click there is a click that cannot place the pin.
+  store.select(null)
+  pendingPin = null
+  mapView.clearDraft()
+  mapView.beginPick((point) => {
+    void handlePick(listing, point.lat, point.lon)
+  })
+  pickerNode.hidden = false
+  pickerSave.hidden = true
+  pickerSave.disabled = true
+  pickerTitle.textContent = `Where is ${listing.address.label}?`
+  pickerHint.textContent = 'Click on the map to drop a pin · Esc to cancel'
+}
+
+async function handlePick(listing: Listing, lat: number, lon: number): Promise<void> {
+  pendingPin = { listing, lat, lon, geocode: null }
+  mapView.showDraft({ lat, lon }, 'New pin')
+  pickerHint.textContent = 'Looking up the address…'
+  pickerSave.hidden = true
+
+  const geocode = await reverseGeocode(lat, lon)
+  // Cancelled, or another spot picked, while the lookup was in flight.
+  if (!pendingPin || pendingPin.lat !== lat || pendingPin.lon !== lon) return
+  pendingPin.geocode = geocode
+
+  const label = geocode.label ?? `${lat.toFixed(5)}, ${lon.toFixed(5)}`
+  mapView.showDraft({ lat, lon }, label)
+  pickerHint.textContent = geocode.label
+    ? 'Save this location, or click elsewhere to adjust.'
+    : 'No address found for this spot — the coordinates are still saved.'
+  pickerSave.hidden = false
+  pickerSave.disabled = false
+}
+
+async function savePendingPin(): Promise<void> {
+  const pending = pendingPin
+  if (!pending) return
+  pickerSave.disabled = true
+  pickerHint.textContent = 'Writing the coordinates into info.json…'
+  try {
+    await saveLocation(pending.listing, {
+      lat: pending.lat,
+      lon: pending.lon,
+      label: pending.geocode?.label ?? null,
+      street: pending.geocode?.street ?? null,
+      houseNumber: pending.geocode?.houseNumber ?? null,
+      postalCode: pending.geocode?.postalCode ?? null,
+      city: pending.geocode?.city ?? null,
+    })
+    const key = pending.listing.key
+    const folder = pending.listing.folder
+    pendingPin = null
+    pickListing = null
+    mapView.clearDraft()
+    mapView.endPick()
+    pickerNode.hidden = true
+    await load(false)
+    store.select(key)
+    mapView.flyTo(key)
+    showToast(`Location saved in ${folder}/info.json`)
+  } catch (error) {
+    pickerSave.disabled = false
+    pickerHint.textContent = 'Could not save — check the terminal and try again.'
+    showToast((error as Error).message, true)
+  }
+}
+
+function cancelLocating(): void {
+  const restore = pickListing
+  pickListing = null
+  pendingPin = null
+  mapView.endPick()
+  mapView.clearDraft()
+  pickerNode.hidden = true
+  pickerSave.hidden = true
+  if (restore) store.select(restore.key)
+}
+
+pickerSave.addEventListener('click', () => void savePendingPin())
+pickerCancel.addEventListener('click', () => cancelLocating())
 
 function selectListing(key: string): void {
   store.select(key)
@@ -116,6 +236,10 @@ document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
     if (typing) {
       searchInput.blur()
+      return
+    }
+    if (!pickerNode.hidden) {
+      cancelLocating()
       return
     }
     if (detailView.isOpen) {
@@ -177,11 +301,12 @@ function setStatus(state: AppState): void {
       hour: '2-digit',
       minute: '2-digit',
     })
+    const imported = state.meta.imported?.imported.length ?? 0
     text.textContent = `${count} ${count === 1 ? 'listing' : 'listings'} · saved ${scanned}${
-      errors > 0 ? ` · ${errors} archive${errors === 1 ? '' : 's'} skipped` : ''
-    }`
+      imported > 0 ? ` · imported ${imported} archive${imported === 1 ? '' : 's'}` : ''
+    }${errors > 0 ? ` · ${errors} folder${errors === 1 ? '' : 's'} skipped` : ''}`
     if (errors > 0) {
-      statusNode.title = state.meta.errors.map((error) => `${error.zipFile}: ${error.message}`).join('\n')
+      statusNode.title = state.meta.errors.map((error) => `${error.folder}: ${error.message}`).join('\n')
     }
   }
   statusNode.append(text)
@@ -263,6 +388,7 @@ async function load(showSpinner: boolean): Promise<void> {
       scannedAt: response.scannedAt,
       sourceDir: response.sourceDir,
       errors: response.errors,
+      imported: response.imported,
     })
     if (response.errors.length > 0) {
       console.warn('[immo-viewer] archives skipped:', response.errors)

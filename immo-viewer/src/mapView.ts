@@ -1,4 +1,4 @@
-import maplibregl, { type Map as MapLibreMap, type Marker } from 'maplibre-gl'
+import maplibregl, { type Map as MapLibreMap, type MapMouseEvent, type Marker } from 'maplibre-gl'
 import { el } from './dom'
 import { euroCompact } from './format'
 import type { Listing } from './types'
@@ -31,15 +31,24 @@ interface Pin {
   element: HTMLButtonElement
 }
 
+export interface PickedPoint {
+  lon: number
+  lat: number
+}
+
 export class MapView {
   private readonly map: MapLibreMap
   private readonly pins = new Map<string, Pin>()
   private signature = ''
   private styleSettled = false
   private fallbackTimer: ReturnType<typeof setTimeout> | undefined
+  /** Set while the user is choosing a spot for a listing that has no pin. */
+  private pickHandler: ((point: PickedPoint) => void) | null = null
+  private draftMarker: Marker | null = null
+  private draftElement: HTMLElement | null = null
 
   constructor(
-    container: HTMLElement,
+    private readonly container: HTMLElement,
     private readonly options: MapViewOptions,
   ) {
     this.map = new maplibregl.Map({
@@ -163,6 +172,62 @@ export class MapView {
 
   resize(): void {
     this.map.resize()
+  }
+
+  get isPicking(): boolean {
+    return this.pickHandler !== null
+  }
+
+  /** Crosshair mode: the next map click reports its coordinates. */
+  beginPick(onPick: (point: PickedPoint) => void): void {
+    this.endPick()
+    this.pickHandler = onPick
+    this.container.classList.add('is-picking')
+    this.map.getCanvas().style.cursor = 'crosshair'
+    this.map.on('click', this.handleMapClick)
+  }
+
+  endPick(): void {
+    if (this.pickHandler) {
+      this.pickHandler = null
+      this.map.off('click', this.handleMapClick)
+    }
+    this.container.classList.remove('is-picking')
+    this.map.getCanvas().style.cursor = ''
+  }
+
+  /** Shows the not-yet-saved pin. */
+  showDraft(point: PickedPoint, label: string | null): void {
+    if (!this.draftElement) {
+      this.draftElement = el('div', { class: 'pin-draft' }, [
+        el('div', { class: 'pin-draft-label' }),
+        el('div', { class: 'pin-draft-dot' }),
+      ])
+      // Position before adding: Marker.addTo() reads the position right away.
+      this.draftMarker = new maplibregl.Marker({
+        element: this.draftElement,
+        anchor: 'bottom',
+      })
+        .setLngLat([point.lon, point.lat])
+        .addTo(this.map)
+    }
+    this.draftMarker?.setLngLat([point.lon, point.lat])
+    const labelNode = this.draftElement.querySelector('.pin-draft-label')
+    if (labelNode) labelNode.textContent = label ?? 'New pin'
+  }
+
+  clearDraft(): void {
+    this.draftMarker?.remove()
+    this.draftMarker = null
+    this.draftElement = null
+  }
+
+  private readonly handleMapClick = (event: MapMouseEvent): void => {
+    // Stay in pick mode: clicking again moves the draft pin so the spot can be
+    // adjusted without pressing the button twice.
+    const handler = this.pickHandler
+    if (!handler) return
+    handler({ lon: event.lngLat.lng, lat: event.lngLat.lat })
   }
 
   private decorate(element: HTMLButtonElement, listing: Listing): void {

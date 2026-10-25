@@ -1,6 +1,8 @@
 # Personal listing data — never committed
 data/exports/*
 !data/exports/.gitkeep
+data/listings/*
+!data/listings/.gitkeep
 data/cache/
 
 # macOS

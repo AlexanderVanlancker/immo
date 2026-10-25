@@ -1,4 +1,4 @@
-import { archiveUrl, floorPlanUrl, photoUrl } from './api'
+import { documentUrl, floorPlanUrl, photoUrl } from './api'
 import { clear, el, svgIcon } from './dom'
 import { epcColor } from './epc'
 import { date, euro, euroPerSqm, number, plural, relativeDays, squareMetres } from './format'
@@ -375,10 +375,15 @@ export class DetailView {
 
   private buildLocation(listing: Listing): HTMLElement {
     const { address } = listing
+    const hasPin = address.lat !== null && address.lon !== null
+    const manual = address.geoSource === 'manual' ? address.manual : null
+
     const items = [
       fact('Address', address.label),
       fact('Property name', address.propertyName),
       fact('Coordinates', address.lat === null ? null : `${address.lat.toFixed(5)}, ${address.lon?.toFixed(5)}`),
+      fact('Pin placed', manual?.pinnedAt ? `${date(manual.pinnedAt)} (by hand)` : null),
+      fact('OpenStreetMap says', manual?.label),
     ].filter((item): item is HTMLElement => item !== null)
 
     const links: HTMLElement[] = []
@@ -418,8 +423,31 @@ export class DetailView {
       )
     }
 
+    // The one thing the viewer can write back: where the listing actually is.
+    if (this.options.onLocate) {
+      links.unshift(
+        el('button', {
+          class: hasPin ? 'action' : 'action primary',
+          attrs: { type: 'button' },
+          text: hasPin ? 'Move the pin on the map' : 'Place this listing on the map',
+          on: {
+            click: (event) => {
+              event.preventDefault()
+              this.options.onLocate?.(listing)
+            },
+          },
+        }),
+      )
+    }
+
     return el('div', { class: 'detail-section' }, [
       el('h3', { class: 'section-title', text: 'Location' }),
+      hasPin
+        ? null
+        : el('p', {
+            class: 'panel-sub',
+            text: 'This archive has no coordinates. Click “Place this listing on the map”, pick the spot, and the coordinates are written into info.json.',
+          }),
       el('dl', { class: 'fact-grid' }, items),
       links.length > 0 ? el('div', { class: 'link-list', style: { marginTop: '10px' } }, links) : null,
     ])
@@ -455,11 +483,13 @@ export class DetailView {
         ]),
       )
     }
+    // The archive is unpacked on disk: offer the normalised record itself.
     actions.push(
-      el('a', { class: 'action', attrs: { href: archiveUrl(listing), download: listing.zipFile } }, [
-        svgIcon(DOWNLOAD_ICON),
-        'Download the ZIP',
-      ]),
+      el(
+        'a',
+        { class: 'action', attrs: { href: documentUrl(listing, 'info.json'), download: 'info.json' } },
+        [svgIcon(DOWNLOAD_ICON), 'Download info.json'],
+      ),
     )
 
     return el('div', { class: 'detail-section' }, [
@@ -467,7 +497,7 @@ export class DetailView {
       el('div', { class: 'link-list' }, actions),
       el('p', {
         class: 'panel-sub',
-        text: `${plural(listing.media.photos.length, 'photo')} · ${plural(listing.media.floorPlans.length, 'floor plan')} · ${plural(listing.media.documents.length, 'document')} in ${listing.zipFile}`,
+        text: `${plural(listing.media.photos.length, 'photo')} · ${plural(listing.media.floorPlans.length, 'floor plan')} · ${plural(listing.media.documents.length, 'document')} in ${listing.folder}/`,
         style: { marginTop: '10px', marginBottom: '0' },
       }),
     ])

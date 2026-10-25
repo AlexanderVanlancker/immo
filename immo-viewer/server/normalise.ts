@@ -42,14 +42,15 @@ export interface MediaEntryInfo {
 
 export interface NormaliseInput {
   key: string
-  zipFile: string
+  /** Folder name of the listing on disk, e.g. `Gentplaats 12  2000 — Antwerpen`. */
+  folder: string
   info: Raw
   photos: MediaEntryInfo[]
   floorPlans: MediaEntryInfo[]
   documents: MediaEntryInfo[]
 }
 
-export function normaliseListing({ key, zipFile, info, photos, floorPlans, documents }: NormaliseInput): Listing {
+export function normaliseListing({ key, folder, info, photos, floorPlans, documents }: NormaliseInput): Listing {
   const warnings: string[] = []
 
   const transaction = asObject(info.transaction)
@@ -77,11 +78,17 @@ export function normaliseListing({ key, zipFile, info, photos, floorPlans, docum
     label: '',
     lat: asNumber(location.latitude),
     lon: asNumber(location.longitude),
+    geoSource: (asString(location.geoSource) as 'listing' | 'manual' | null) ?? null,
+    manual: (() => {
+      const manual = asObject(location.manual)
+      if (Object.keys(manual).length === 0) return null
+      return { label: asString(manual.label), pinnedAt: asString(manual.pinnedAt) }
+    })(),
   }
   address.label = buildAddressLabel(address)
 
   if (address.lat === null || address.lon === null) {
-    warnings.push('No coordinates: this listing cannot be shown on the map.')
+    warnings.push('No coordinates yet — place this listing on the map to pin it.')
   }
 
   const area: ListingArea = {
@@ -202,7 +209,7 @@ export function normaliseListing({ key, zipFile, info, photos, floorPlans, docum
 
   return {
     key,
-    zipFile,
+    folder,
     immowebId: asNumber(info.id),
     externalReference: asString(info.externalReference),
     source: asString(info.source) ?? 'Immoweb',

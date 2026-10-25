@@ -20,6 +20,10 @@ export interface ListingAddress {
   label: string
   lat: number | null
   lon: number | null
+  /** Where the coordinates came from: the listing itself, or a hand-placed pin. */
+  geoSource: 'listing' | 'manual' | null
+  /** Set when you pinned the listing by hand on the map. */
+  manual: { label: string | null; pinnedAt: string | null } | null
 }
 
 export interface ListingRent {
@@ -123,10 +127,10 @@ export interface ListingMedia {
 }
 
 export interface Listing {
-  /** Stable, URL-safe identifier derived from the ZIP file name. */
+  /** Stable, URL-safe identifier derived from the folder name. */
   key: string
-  /** File name of the source archive, e.g. `Gentplaats 12  2000 — Antwerpen.zip`. */
-  zipFile: string
+  /** Folder this listing lives in, e.g. `Gentplaats 12  2000 — Antwerpen`. */
+  folder: string
   immowebId: number | null
   externalReference: string | null
   /** Which site the archive came from: `Immoweb` or `Immoscoop`. */
@@ -170,8 +174,16 @@ export interface Listing {
 }
 
 export interface ScanError {
-  zipFile: string
+  /** Folder (or archive, for import problems) the error is about. */
+  folder: string
   message: string
+}
+
+/** What the last inbox import did, so the UI can mention it. */
+export interface ImportReport {
+  imported: { archive: string; folder: string; action: 'imported' | 'replaced' }[]
+  skipped: string[]
+  errors: { archive: string; message: string }[]
 }
 
 export interface ListingsResponse {
@@ -179,4 +191,5 @@ export interface ListingsResponse {
   sourceDir: string
   listings: Listing[]
   errors: ScanError[]
+  imported: ImportReport | null
 }

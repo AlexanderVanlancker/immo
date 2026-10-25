@@ -1,18 +1,34 @@
 # immo-viewer
 
-A local web app that reads the ZIP archives produced by
-[`immoweb-zipper`](../immoweb-zipper) and turns them into a map, a filterable list and a
-stats view.
+A local web app that turns the listings saved by
+[`immoweb-zipper`](../immoweb-zipper) into a map, a filterable list and a stats view.
 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
 ```
 
-It looks for archives in `../data/exports/` by default. Point it elsewhere with
-`IMMOWEB_EXPORTS_DIR=/path/to/zips npm run dev`.
+Two folders, both outside git:
 
-Nothing is written back: the archives stay exactly as the extension saved them.
+| Folder | What it is |
+| --- | --- |
+| `../data/exports/` | **Inbox.** The ZIPs the extension downloads, exactly as they arrived. |
+| `../data/listings/` | **Store.** One plain folder per listing: `info.json`, photos, floor plans, documents. |
+
+The inbox is imported on every scan (`ditto` on macOS, `bsdtar`/`unzip` elsewhere), so dropping
+a ZIP and pressing **Refresh** is still the whole workflow. Nothing in this app understands
+ZIP: it reads folders. Import without starting the server with:
+
+```bash
+npm run unpack
+```
+
+Point it elsewhere with `IMMOWEB_EXPORTS_DIR=~/Downloads` and/or
+`IMMO_LISTINGS_DIR=/path/to/folders`. Archives stay in the inbox after import and are skipped
+until they change; deleting a listing folder makes the next scan re-import it from its ZIP.
+
+The one thing written back is the location: pinning a listing on the map rewrites its
+`info.json` (atomically, source data untouched). Everything else stays as saved.
 
 ## What you get
 
@@ -38,10 +54,11 @@ return. Hovering a card highlights its pin and vice versa; clicking either opens
 panel. The basemap is [OpenFreeMap](https://openfreemap.org)'s key-less `liberty` style, with
 an OpenStreetMap raster fallback if that style cannot be loaded.
 
-**Detail panel.** Full photo gallery from the archive (arrow keys work), price and €/m²,
+**Detail panel.** Full photo gallery from the listing folder (arrow keys work), price and €/m²,
 around 25 property facts, energy certificate details, comfort features, description, agency,
-an OpenStreetMap link, floor-plan links, a link back to the original listing page and a
-download of the original ZIP.
+an OpenStreetMap link, floor-plan links, a link back to the original listing page, a download
+of the normalised `info.json`, and **Place this listing on the map** for anything that arrived
+without coordinates.
 
 **Stats.** KPIs (count, median price, median €/m², median living area, geocoded share) plus
 six charts, all computed over the *currently filtered* set:
@@ -64,9 +81,9 @@ It is a Vite + TypeScript single-page app with a small server side, both in this
 
 ```
 server/
-  zip.ts         dependency-free ZIP reader (central directory, deflate + stored, ZIP64-aware)
+  unpack.ts      imports the inbox with the platform extractor (ditto / bsdtar / unzip)
   normalise.ts   info.json  →  Listing DTO (defensive: every field is optional)
-  store.ts       scans the exports folder, caches parsed archives, serves assets
+  store.ts       reads the listing folders, caches them, serves files, writes the pin back
   api.ts         Connect middleware mounted by Vite for both dev and preview
 src/
   main.ts        bootstrap + wiring
@@ -86,18 +103,20 @@ Served by the same process as the app (`vite dev` and `vite preview` both mount 
 
 | Route | Returns |
 | --- | --- |
-| `GET /api/listings` | `{ scannedAt, sourceDir, listings: Listing[], errors: [{ zipFile, message }] }` |
+| `GET /api/listings` | `{ scannedAt, sourceDir, listings: Listing[], errors: [{ folder, message }], imported }` |
 | `GET /api/listings/:key/photos/:index` | Photo bytes, `image/jpeg` (immutable cache headers) |
 | `GET /api/listings/:key/floorplans/:index` | Floor plan (PDF or image) |
 | `GET /api/listings/:key/documents/:index` | Brochure / certificate |
-| `GET /api/listings/:key/archive` | The original ZIP |
+| `GET /api/listings/:key/files/:name` | A text file from the folder (`info.json`, `summary.md`, …) |
+| `POST /api/listings/:key/location` | `{ lat, lon, label?, street?, … }` → writes `info.json`, returns the listing |
 | `GET /api/health` | `{ ok, sourceDir }` |
 
-`:key` is a stable slug derived from the ZIP file name, e.g.
+`:key` is a stable slug derived from the folder name, e.g.
 `maria-claessensplein-5-2050-antwerpen-c5f6a1`.
 
-Each `GET /api/listings` rescans the folder (`readdir` + `stat`), so new ZIPs appear without a
-restart; unchanged archives are served from the parsed cache.
+Each `GET /api/listings` imports whatever is new in the inbox and rescans the store
+(`readdir` + `stat`), so new listings appear without a restart; folders whose `info.json` has
+not changed are served from the parsed cache.
 
 ### Adding a field
 
@@ -114,15 +133,18 @@ If the extension does not capture the field yet, add it to `offscreen.js` in
 ## Tests
 
 ```bash
-npm test        # vitest: ZIP reader, normaliser, filters, stats (no network, no personal data)
+npm test        # vitest: inbox import, folder store, pin write-back, normaliser,
+                # filters, stats (no network, no personal data)
 npm run typecheck
 npm run build
 npm run smoke   # Playwright end-to-end against a running dev server (needs `npm i -D playwright`)
 ```
 
-The unit tests use synthetic fixtures in `test/fixtures/`, so they never depend on your own
-archives. The smoke test drives the real app against whatever is in `data/exports/` and
-checks listing cards, map pins, the detail gallery, filtering, search and the stats charts.
+The unit tests build their own folders and archives in a temp directory, so they never depend
+on (or write to) your own listings. The smoke test drives the real app against whatever is in
+`data/listings/` and checks listing cards, map pins, the detail gallery, filtering, search and
+the stats charts — its expectations are derived from `/api/listings`, so it survives a growing
+collection.
 
 ## Shortcuts
 
