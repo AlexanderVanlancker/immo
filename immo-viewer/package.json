@@ -1,0 +1,26 @@
+{
+  "name": "immo-viewer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Map, list and stats view for the Immoweb listings saved as ZIP by the Immoweb Listing Zipper.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "smoke": "node test/smoke.mjs",
+    "start": "vite"
+  },
+  "dependencies": {
+    "maplibre-gl": "^5.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.1",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4"
+  }
+}

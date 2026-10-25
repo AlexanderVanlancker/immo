@@ -1,0 +1,152 @@
+{
+  "source": "Immoweb",
+  "url": "https://www.immoweb.be/en/classified/house/for-sale/example/2000/11111111",
+  "id": 11111111,
+  "externalReference": "9000000001",
+  "capturedAt": "2026-10-24T21:06:28.598Z",
+  "language": "en",
+  "transaction": {
+    "type": "FOR_SALE",
+    "typeLabel": "For sale",
+    "subtype": "BUY_REGULAR",
+    "subtypeLabel": "Standard sale",
+    "kind": "for-sale",
+    "availabilityDate": null,
+    "status": "available"
+  },
+  "price": {
+    "display": "€475,000",
+    "value": 475000,
+    "currency": "EUR",
+    "label": "Price",
+    "oldValue": 495000,
+    "oldDisplay": "€495,000",
+    "hidden": false,
+    "pricePerSqm": null,
+    "computedPricePerSqm": 3654,
+    "cadastralIncome": 904,
+    "subjectToVat": false,
+    "isFurnished": null,
+    "rent": null
+  },
+  "property": {
+    "type": "HOUSE",
+    "typeLabel": "House",
+    "subtype": "HOUSE",
+    "subtypeLabel": "House",
+    "title": null,
+    "name": null,
+    "description": "A half-open town house near the water.",
+    "descriptionLanguage": "en",
+    "livingArea": 130,
+    "plotArea": 122,
+    "plotWidth": 9,
+    "gardenArea": 57,
+    "terraceArea": 12,
+    "bedrooms": 3,
+    "bedroomSurfaces": [12, 9, 9],
+    "bathrooms": 1,
+    "showerRooms": 1,
+    "toilets": 2,
+    "rooms": 12,
+    "floor": null,
+    "floorCount": 1,
+    "constructionYear": 2022,
+    "condition": "AS_NEW",
+    "conditionLabel": "As new",
+    "facadeCount": 3,
+    "streetFacadeWidth": 16,
+    "basementSurface": 2,
+    "monthlyCosts": null,
+    "kitchen": { "type": "HYPER_EQUIPPED", "typeLabel": "Hyper equipped", "surface": 13, "equipped": null },
+    "livingRoomSurface": 25,
+    "parking": { "indoor": 1, "outdoor": null, "closedBox": null },
+    "features": {
+      "lift": true,
+      "garden": true,
+      "terrace": true,
+      "swimmingPool": false,
+      "airConditioning": false,
+      "basement": true,
+      "dressingRoom": false,
+      "laundryRoom": true,
+      "fireplace": false,
+      "visiophone": true,
+      "internet": true,
+      "somethingUnknown": "not-a-boolean"
+    }
+  },
+  "location": {
+    "street": "Example Street",
+    "number": "5",
+    "box": null,
+    "postalCode": "2000",
+    "locality": "Antwerpen",
+    "district": "Antwerp",
+    "province": "Antwerp",
+    "region": "Flanders",
+    "country": "Belgium",
+    "propertyName": "Yade",
+    "latitude": 51.21715769999999,
+    "longitude": 4.365175,
+    "address": "Example Street 5"
+  },
+  "energy": {
+    "epcScore": "A",
+    "energyPerSqmYear": 67,
+    "energyPerYear": null,
+    "epcReference": "REF-1",
+    "carbonEmission": null,
+    "renovationObligation": false
+  },
+  "heating": {
+    "type": "GAS",
+    "typeLabel": "Gas",
+    "heatPump": false,
+    "photovoltaicPanels": false,
+    "thermicPanels": false,
+    "doubleGlazing": true
+  },
+  "certificates": {
+    "electricalCertificate": true,
+    "floodZoneLabel": "Not in a flood zone",
+    "asbestosCertificate": null
+  },
+  "agency": [
+    {
+      "name": "Example Agency",
+      "type": "AGENCY_PAYING_WITH_OGONE",
+      "typeLabel": "Agency",
+      "phone": null,
+      "mobile": "+32470000000",
+      "email": "hello@example.be",
+      "website": "https://example.be",
+      "ipiNumber": "500000",
+      "address": "Main Street 1, 2000, Antwerpen",
+      "agent": { "name": null, "email": "hello@example.be", "phone": null }
+    }
+  ],
+  "publication": {
+    "created": "2026-09-05T10:28:28.018Z",
+    "lastModification": "2026-10-09T12:11:34.243Z",
+    "expiration": null
+  },
+  "media": {
+    "pictureCount": 2,
+    "floorPlanCount": 1,
+    "documentCount": 0,
+    "virtualTourUrl": null,
+    "videoUrl": null
+  },
+  "flags": {
+    "isNew": false,
+    "isNewPrice": true,
+    "isSoldOrRented": false,
+    "isInvestmentProject": false,
+    "isNotarySale": null,
+    "isLifeAnnuitySale": false,
+    "isPublicSale": false,
+    "isNewlyBuilt": false
+  },
+  "displayTitle": "House for sale in Antwerpen (2000)"
+}

@@ -1,0 +1,20 @@
+# Personal listing data — never committed
+data/exports/*
+!data/exports/.gitkeep
+data/cache/
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# immoweb-zipper test output (see immoweb-zipper/.gitignore)
+immoweb-zipper/test/out/
+
+# Editor
+*.swp
+.idea/
+.vscode/

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Immoweb Listing Zipper</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <img src="icons/icon48.png" alt="" width="32" height="32" />
+      <div class="head-text">
+        <h1>Immoweb Zipper</h1>
+        <p id="page-info" class="muted">Checking the current tab…</p>
+      </div>
+    </header>
+
+    <section id="options" class="options">
+      <label class="row" for="photo-size">
+        <span>Photo size</span>
+        <select id="photo-size">
+          <option value="extra">Max (2560 px)</option>
+          <option value="large">Large (736 px)</option>
+          <option value="medium">Medium (300 px)</option>
+          <option value="small">Small (100 px)</option>
+        </select>
+      </label>
+      <label class="row check">
+        <input type="checkbox" id="page-html" />
+        <span>Include raw page snapshot (<code>page.html</code>)</span>
+      </label>
+      <label class="row check">
+        <input type="checkbox" id="save-as" />
+        <span>Ask where to save</span>
+      </label>
+    </section>
+
+    <button id="save" class="primary" disabled>Save this listing as ZIP</button>
+
+    <section id="status" class="status hidden">
+      <div class="bar"><div id="bar-fill"></div></div>
+      <p id="status-text" class="status-text"></p>
+      <p id="status-error" class="error hidden"></p>
+      <button id="reveal" class="link hidden" type="button">Show in folder</button>
+    </section>
+
+    <footer>
+      <span id="hint" class="muted">Everything is processed locally — no server involved.</span>
+      <span id="version" class="muted"></span>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

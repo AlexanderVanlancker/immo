@@ -1,0 +1,515 @@
+{
+ "id": 21807693,
+ "cluster": null,
+ "customers": [
+  {
+   "id": 23235,
+   "type": "AGENCY",
+   "email": "immobib_antwerpen@importfrommedia.be",
+   "logoUrl": "https://media-resize.immowebstatic.be/customers/0012p00002TxstGAAR/500x500/logo/c85c7279f3c23a982bd01a3c32c36d8b.jpg",
+   "phoneNumber": "+3232305939",
+   "mobileNumber": null,
+   "name": "Immobib",
+   "website": null,
+   "location": {
+    "country": "Belgium",
+    "region": null,
+    "province": "Antwerp",
+    "district": "Antwerp",
+    "locality": "Antwerpen",
+    "postalCode": "2018",
+    "street": "Mechelsesteenweg,157",
+    "number": null,
+    "box": null,
+    "propertyName": null,
+    "floor": null,
+    "latitude": 51.20503777217291,
+    "longitude": 4.410970510792923,
+    "distance": null,
+    "approximated": null,
+    "regionCode": null,
+    "type": null,
+    "hasSeaView": null,
+    "pointsOfInterest": null,
+    "placeName": null
+   },
+   "ipiNo": "201997",
+   "isOwner": true,
+   "contactHoursMobile": null,
+   "contactHoursLandline": "anytime",
+   "salesRepresentative": null,
+   "features": {
+    "page404": true,
+    "investorFlag": false,
+    "relatedClassifieds": true,
+    "leafletsCTA": false,
+    "leadQualification": true,
+    "recommendation": true,
+    "agentPersonification": false
+   },
+   "yearOfFoundation": null,
+   "numberOfProjectsSold": null,
+   "numberOfActiveProjects": null,
+   "agent": null
+  }
+ ],
+ "premiumProjectPage": {
+  "medias": null,
+  "options": null,
+  "promoter": null,
+  "tabs": null
+ },
+ "flags": {
+  "isPublicSale": false,
+  "isNewClassified": false,
+  "isNewPrice": false,
+  "isInvestmentProject": false,
+  "isNewlyBuilt": false,
+  "isNotarySale": null,
+  "isLifeAnnuitySale": false,
+  "adQuality": null,
+  "date": null,
+  "priceSqm": null,
+  "price": null,
+  "default": null,
+  "isSoldOrRented": false,
+  "isLowEnergy": null,
+  "percentSold": null,
+  "isPassiveHouse": null,
+  "isNewRealEstateProject": false,
+  "isAnInteractiveSale": null,
+  "isUnderOption": false
+ },
+ "media": {
+  "pictures": [
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/b903573ad47fa5ee4a5a8ea5d6d4db4e.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/b903573ad47fa5ee4a5a8ea5d6d4db4e.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/b903573ad47fa5ee4a5a8ea5d6d4db4e.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/b903573ad47fa5ee4a5a8ea5d6d4db4e.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/d80f088dada10073898ddde5504d2666.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/d80f088dada10073898ddde5504d2666.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/d80f088dada10073898ddde5504d2666.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/d80f088dada10073898ddde5504d2666.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/83a5a14a1aad9080004c2a34ae4840b8.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/83a5a14a1aad9080004c2a34ae4840b8.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/83a5a14a1aad9080004c2a34ae4840b8.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/83a5a14a1aad9080004c2a34ae4840b8.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/479a00cf6563d74709092421a69e7eaf.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/479a00cf6563d74709092421a69e7eaf.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/479a00cf6563d74709092421a69e7eaf.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/479a00cf6563d74709092421a69e7eaf.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/65e49b40781ceec61c70704f14b85542.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/65e49b40781ceec61c70704f14b85542.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/65e49b40781ceec61c70704f14b85542.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/65e49b40781ceec61c70704f14b85542.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/9c5f162626f21fa13b3c1f94a8076192.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/9c5f162626f21fa13b3c1f94a8076192.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/9c5f162626f21fa13b3c1f94a8076192.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/9c5f162626f21fa13b3c1f94a8076192.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/2f2ab4788eb165f60a3593138d069e56.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/2f2ab4788eb165f60a3593138d069e56.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/2f2ab4788eb165f60a3593138d069e56.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/2f2ab4788eb165f60a3593138d069e56.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/deeae3d50f8de62ec4add52b5c222343.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/deeae3d50f8de62ec4add52b5c222343.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/deeae3d50f8de62ec4add52b5c222343.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/deeae3d50f8de62ec4add52b5c222343.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/ec35dd0d64378978ba885bb3da3cb2ba.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/ec35dd0d64378978ba885bb3da3cb2ba.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/ec35dd0d64378978ba885bb3da3cb2ba.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/ec35dd0d64378978ba885bb3da3cb2ba.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/e04908679af0e06c6f4a431e14e1ef7a.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/e04908679af0e06c6f4a431e14e1ef7a.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/e04908679af0e06c6f4a431e14e1ef7a.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/e04908679af0e06c6f4a431e14e1ef7a.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/b95ab54dd6c6d05994eaf2a262b01f63.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/b95ab54dd6c6d05994eaf2a262b01f63.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/b95ab54dd6c6d05994eaf2a262b01f63.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/b95ab54dd6c6d05994eaf2a262b01f63.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/a907ab335f877d994d6d8c059fe48d32.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/a907ab335f877d994d6d8c059fe48d32.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/a907ab335f877d994d6d8c059fe48d32.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/a907ab335f877d994d6d8c059fe48d32.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/cf22c3e5192a3449fd2d44d6b06a6d3a.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/cf22c3e5192a3449fd2d44d6b06a6d3a.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/cf22c3e5192a3449fd2d44d6b06a6d3a.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/cf22c3e5192a3449fd2d44d6b06a6d3a.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/04faed3bfeea4a6f721535840bed1b6a.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/04faed3bfeea4a6f721535840bed1b6a.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/04faed3bfeea4a6f721535840bed1b6a.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/04faed3bfeea4a6f721535840bed1b6a.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/496adf414b5fd0bf3d75a703db54e914.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/496adf414b5fd0bf3d75a703db54e914.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/496adf414b5fd0bf3d75a703db54e914.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/496adf414b5fd0bf3d75a703db54e914.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/787354283f2a86f9225c2916facc3dee.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/787354283f2a86f9225c2916facc3dee.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/787354283f2a86f9225c2916facc3dee.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/787354283f2a86f9225c2916facc3dee.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/4684a19feb4f714083658072c236208d.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/4684a19feb4f714083658072c236208d.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/4684a19feb4f714083658072c236208d.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/4684a19feb4f714083658072c236208d.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/6c872eb1b935dede51c360ede666aaed.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/6c872eb1b935dede51c360ede666aaed.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/6c872eb1b935dede51c360ede666aaed.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/6c872eb1b935dede51c360ede666aaed.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/e7aa63c039e1cd3aec3631c22825ac8e.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/e7aa63c039e1cd3aec3631c22825ac8e.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/e7aa63c039e1cd3aec3631c22825ac8e.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/e7aa63c039e1cd3aec3631c22825ac8e.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/a4fafefe8f6fe25b9708965062ee4bec.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/a4fafefe8f6fe25b9708965062ee4bec.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/a4fafefe8f6fe25b9708965062ee4bec.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/a4fafefe8f6fe25b9708965062ee4bec.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/05dfc97228f71beb0ed9b28d853c7d85.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/05dfc97228f71beb0ed9b28d853c7d85.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/05dfc97228f71beb0ed9b28d853c7d85.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/05dfc97228f71beb0ed9b28d853c7d85.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/82afc37312f468045f750414fbcba559.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/82afc37312f468045f750414fbcba559.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/82afc37312f468045f750414fbcba559.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/82afc37312f468045f750414fbcba559.jpg",
+    "isVertical": false
+   },
+   {
+    "smallUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/100x100/6176e37ae082cbad8a8d721ba8307d04.jpg",
+    "mediumUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/300x300/6176e37ae082cbad8a8d721ba8307d04.jpg",
+    "largeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/736x736/6176e37ae082cbad8a8d721ba8307d04.jpg",
+    "extralargeUrl": "https://media-resize.immowebstatic.be/classifieds/7548b416-d06a-4bc3-91b2-ea47825e730c/2560x1440/6176e37ae082cbad8a8d721ba8307d04.jpg",
+    "isVertical": false
+   }
+  ],
+  "virtualTourUrl": null,
+  "floorPlans": null,
+  "specifications": null,
+  "documents": [],
+  "virtualExperienceUrl": null,
+  "externalVideoUrl": null,
+  "externalVideoThumbnailUrl": null,
+  "externalVideoEmbedUrl": null
+ },
+ "property": {
+  "type": "APARTMENT",
+  "subtype": "PENTHOUSE",
+  "title": "Exclusive penthouse in an absolute prime location",
+  "description": "Welcome to your new home! On the top floor of the iconic architectural building “The Residence”, you will discover this impressive penthouse. Located in the heart of Antwerp, in the highly sought-after district of ’t Nieuw-Zuid, where tranquility and vibrant city life are perfectly balanced.\nFrom the lift, you step directly into the apartment. The tone is immediately set thanks to the high-quality materials and refined finishes. This creates an exclusive atmosphere that is fully reflected in the spacious, sun-filled living area, with the semi-open kitchen as a true eye-catcher. The combination of natural elements, clean lines and black accents creates a harmonious whole, turning cooking into a true experience. In addition, the terrace of 113 m² forms a perfect extension of the living space. With phenomenal views over the beloved city and the waters of the quays, this is a place where time seems to stand still.\nFurthermore, the property features a spacious bedroom (18 m²) that evokes a true hotel feeling thanks to the luxurious en-suite bathroom with walk-in shower and bathtub. The second bedroom (17 m²) enjoys its own outdoor space. Finally, there is a separate trendy bathroom equipped with a walk-in shower and double washbasin set in a stylish vanity unit.\nIn short, this is a place where every day feels like a unique experience, high above the city. Schedule a visit soon and let the spaces speak for themselves!\nMonthly costs: provision of €309.30 (maintenance and cleaning, electricity of common areas, syndic, insurance, waste management, etc.). Quarterly payments with annual settlement.\nTechnical details: EPC A!! Insulated floors, walls and roof. Built-in lighting, alarm system and home automation available.\nUrban planning information pending, soil certificate available. The property is not located in a flood-risk zone (P- and G-score D). Renovation obligation does not apply. As the property was built after 2001, an asbestos certificate is also not required.",
+  "name": null,
+  "isHolidayProperty": null,
+  "bedroomCount": 2,
+  "bedrooms": [
+   {
+    "surface": 18
+   },
+   {
+    "surface": 17
+   }
+  ],
+  "bathroomCount": 2,
+  "bathrooms": [],
+  "location": {
+   "country": "Belgium",
+   "region": "Flanders",
+   "province": "Antwerp",
+   "district": "Antwerp",
+   "locality": "Antwerpen",
+   "postalCode": "2000",
+   "street": "Gentplaats",
+   "number": "12",
+   "box": null,
+   "propertyName": null,
+   "floor": 6,
+   "latitude": 51.2060052,
+   "longitude": 4.3864118,
+   "distance": null,
+   "approximated": null,
+   "regionCode": "FLANDERS",
+   "type": "URBAN",
+   "hasSeaView": null,
+   "pointsOfInterest": null,
+   "placeName": null
+  },
+  "netHabitableSurface": 207,
+  "roomCount": null,
+  "monthlyCosts": null,
+  "attic": null,
+  "hasAttic": null,
+  "basement": null,
+  "hasBasement": null,
+  "hasDressingRoom": null,
+  "diningRoom": null,
+  "hasDiningRoom": null,
+  "building": {
+   "annexCount": null,
+   "condition": "AS_NEW",
+   "constructionYear": null,
+   "facadeCount": null,
+   "floorCount": 6,
+   "hasSyndicator": null,
+   "isHeritageProtected": null,
+   "sharedSpaces": null,
+   "streetFacadeWidth": null
+  },
+  "propertyCertificates": {
+   "builtPlanStatus": null,
+   "globalInsulationLevel": null,
+   "oilTankCertificateStatus": null,
+   "primaryEnergyConsumptionLevel": null,
+   "hasAsbestosCertificate": false,
+   "hasElectricalInstallationComplianceCertificate": null,
+   "hasJudicialMeasure": null,
+   "hasSeparateElectricityMeter": null,
+   "hasSeparateGasMeter": null,
+   "hasSeparateWaterMeter": null,
+   "hasValidFloodCertificate": null,
+   "enforcementMeasuresRegisterConsulted": null
+  },
+  "hasCaretakerOrConcierge": null,
+  "hasDisabledAccess": false,
+  "hasLift": true,
+  "constructionPermit": {
+   "constructionType": null,
+   "floodZoneType": "NON_FLOOD_ZONE",
+   "isObtained": true,
+   "hasObligationToConstruct": null,
+   "hasPlotDivisionAuthorization": false,
+   "hasPossiblePriorityPurchaseRight": true,
+   "isBreachingUrbanPlanningRegulation": null,
+   "floodZoneIconUrl": null,
+   "mostRecentUrbanDevelopmentZoning": null,
+   "totalBuildableGroundFloorSurface": null,
+   "urbanPlanningInformation": null,
+   "pScore": "D",
+   "gScore": "D",
+   "hasCadastralPlan": null,
+   "hasFirstRefusalRight": null
+  },
+  "energy": null,
+  "kitchen": {
+   "surface": 21,
+   "type": "INSTALLED",
+   "hasOven": null,
+   "hasMicroWaveOven": null,
+   "hasDishwasher": null,
+   "hasWashingMachine": null,
+   "hasFridge": null,
+   "hasFreezer": null,
+   "hasSteamOven": null
+  },
+  "land": null,
+  "laundryRoom": null,
+  "hasLaundryRoom": null,
+  "livingRoom": {
+   "surface": 76
+  },
+  "hasLivingRoom": true,
+  "isFirstOccupation": null,
+  "hasBalcony": null,
+  "hasBarbecue": null,
+  "hasGarden": null,
+  "gardenSurface": null,
+  "gardenOrientation": null,
+  "parkingCountIndoor": 3,
+  "parkingCountOutdoor": null,
+  "parkingCountClosedBox": null,
+  "hasAirConditioning": null,
+  "hasArmoredDoor": null,
+  "hasVisiophone": false,
+  "hasSecureAccessAlarm": null,
+  "hasCableTV": null,
+  "hasDoorPhone": false,
+  "hasInternet": null,
+  "showerRoomCount": null,
+  "showerRooms": [],
+  "specificities": null,
+  "toiletCount": 2,
+  "toilets": [],
+  "hasFitnessRoom": null,
+  "hasTennisCourt": null,
+  "hasSwimmingPool": false,
+  "hasSauna": null,
+  "hasJacuzzi": null,
+  "hasHammam": null,
+  "bedroomSurface": null,
+  "alternativeDescriptions": {
+   "fr": "Bienvenue dans votre nouveau chez-vous ! Au dernier étage de l’immeuble architectural emblématique « The Residence », vous découvrez ce penthouse impressionnant. Situé au cœur d’Anvers, dans le quartier très prisé de ’t Nieuw-Zuid, où calme et vie urbaine animée se rencontrent en parfaite harmonie.\nDepuis l’ascenseur, vous accédez directement à l’appartement. Le ton est immédiatement donné grâce à des matériaux de haute qualité et des finitions raffinées. Cela crée une atmosphère exclusive qui se reflète pleinement dans le spacieux séjour baigné de lumière, avec comme point d’attention la cuisine semi-ouverte. La combinaison d’éléments naturels, de lignes épurées et d’accents noirs crée un ensemble harmonieux, transformant la cuisine en une véritable expérience. De plus, la terrasse de 113 m² constitue un prolongement parfait de l’espace de vie. Avec une vue phénoménale sur la ville et les quais, c’est un endroit où le temps semble s’arrêter.\nLe bien dispose également d’une grande chambre (18 m²) offrant une véritable ambiance d’hôtel grâce à sa salle de bains attenante luxueuse avec douche à l’italienne et baignoire. La deuxième chambre (17 m²) bénéficie de son propre espace extérieur. Enfin, une seconde salle de bains moderne est prévue, équipée d’une douche à l’italienne et d’un double lavabo dans un meuble élégant.\nEn résumé, un lieu où chaque jour devient une expérience unique, au-dessus de la ville. Planifiez rapidement une visite et laissez-vous séduire par les espaces !\nCharges mensuelles : provision de 309,30 € (entretien et nettoyage, électricité des parties communes, syndic, assurances, gestion des déchets, etc.). Paiements trimestriels avec décompte annuel.\nRenseignements urbanistiques en cours de demande, certificat de sol disponible. Le bien n’est pas situé dans une zone à risque d’inondation (score P et G : D). Aucune obligation de rénovation. Le bien ayant été construit après 2001, aucun certificat amiante n’est requis.",
+   "nl": "Welkom in jouw nieuwe thuis! Op de bovenste verdieping van het iconische, architecturale gebouw “The Residence”, ontdek je deze indrukwekkende penthouse. Gelegen in het hartje van Antwerpen, in de gegeerde wijk ‘t Zuid, waar rust en het bruisende stadsleven perfect in balans zijn. \nVanuit de lift stap je rechtstreeks het appartement binnen. De toon wordt meteen gezet dankzij de hoogwaardige materialen en een verfijnde afwerking. Dit zorgt voor een exclusieve sfeer die bovendien volledig tot zijn recht komt in de riante, zonnige leefruimte met als eyecatcher de semi-open keuken. Door de combinatie van natuurlijke elementen, strakke lijnen en zwarte accenten creëert men hier een harmonieus geheel, waardoor koken uitgroeit tot een ware beleving. Daarnaast vormt het terras van 113 m² een perfect verlengstuk van de leefruimte. Met een fenomenaal uitzicht over de geliefde stad en het water van de kaaien, is dit een plek waar de tijd even lijkt stil te staan. \nVerder beschikt men hier nog over een riante slaapkamer (18 m²) die een waar hotelgevoel oproept door de luxueuze ensuite badkamer met inloopdouche en ligbad. Terwijl de tweede slaapkamer (17 m²) dan weer geniet van een eigen buitenruimte. Tot slot is er apart nog een trendy badkamer, voorzien van een inloopdouche en dubbele lavabo in een stijlvol meubel. \nEveneens de mogelijkheid tot het aankopen van 3 autostaanplaatsen. \nKortom, is dit een plek waar elke dag aanvoelt als een unieke beleving, hoog boven de stad. Plan snel een bezoekje in en laat de ruimtes voor zich spreken! \nMaandelijkse kosten: provisie van € 309,30 (onderhoud en schoonmaak, elektriciteit van de gemene delen, syndicus, verzekeringen, huisvuilverwerking, …). Men werkt met een kwartaalopvraging + een jaarlijkse afrekening. \nSI in aanvraag, Bodem aanwezig. Niet in een risicozone voor overstromingen (P- en G-score D). Renovatieplicht en asbestattest n.v.t."
+  },
+  "habitableUnitCount": null,
+  "fireplaceCount": null,
+  "fireplaceExists": false,
+  "hasTerrace": true,
+  "terraceSurface": 113,
+  "terraceOrientation": null,
+  "salesPitch": null
+ },
+ "publication": {
+  "creationDate": "2026-09-02T00:01:20.391Z",
+  "expirationDate": null,
+  "publisherId": null,
+  "visualisationOption": "XL",
+  "lastModificationDate": "2026-10-14T10:02:21.936Z",
+  "detailedPageVisibility": "CLASSIC"
+ },
+ "transaction": {
+  "type": "FOR_SALE",
+  "subtype": "BUY_REGULAR",
+  "availabilityPeriodType": null,
+  "availabilityDate": null,
+  "certificates": {
+   "carbonEmission": null,
+   "primaryEnergyConsumptionPerSqm": 85,
+   "primaryEnergyConsumptionYearly": null,
+   "epcDescription": null,
+   "epcReference": null,
+   "epcScore": "A",
+   "epcUrl": "https://media.immowebstatic.be/epc/pics/peb/fla/a.png",
+   "renovationObligation": false
+  },
+  "hidePrice": false,
+  "rental": null,
+  "sale": {
+   "price": 1595000,
+   "isSubjectToVat": false,
+   "cadastralIncome": 2238,
+   "publicSale": null,
+   "pricePerSqm": null,
+   "oldPrice": null,
+   "lifeAnnuity": null,
+   "hasStartingPrice": null,
+   "isFurnished": false,
+   "homeToBuild": null,
+   "newBuildsTotalPrice": "",
+   "newBuildsVAT": "",
+   "newBuildsVATPercentage": "",
+   "newBuildsLandPrice": "",
+   "newBuildsLandTaxes": ""
+  },
+  "investor": {
+   "isInvestmentProperty": false,
+   "currentMonthlyRentalIncome": null,
+   "currentReturnOnInvestment": null,
+   "expectedMonthlyRentalIncome": null,
+   "expectedMonthlyRentalIncomeDescription": null,
+   "expectedReturnOnInvestment": null,
+   "habitableUnitCount": null,
+   "occupancyRate": null,
+   "rentalIncomeDate": null,
+   "rentalIncomeVatValue": null
+  }
+ },
+ "priceType": null,
+ "price": {
+  "type": "residential_sale",
+  "mainValue": 1595000,
+  "alternativeValue": null,
+  "additionalValue": null,
+  "oldValue": null,
+  "minRangeValue": null,
+  "maxRangeValue": null,
+  "mainDisplayPrice": "€1,595,000",
+  "HTMLDisplayPrice": "<span aria-hidden=\"true\">€1,595,000</span>",
+  "alternativeDisplayPrice": "",
+  "oldDisplayPrice": null,
+  "shortDisplayPrice": "€1.6M",
+  "accessibilityPrice": "1595000€",
+  "label": "Price",
+  "date": null,
+  "language": "en",
+  "hidePrice": false
+ },
+ "externalReference": "7847122",
+ "cloudId": "7548b416-d06a-4bc3-91b2-ea47825e730c",
+ "isBookmarked": false,
+ "hasSectionsArray": {
+  "hasGeneralSection": true,
+  "hasInteriorSection": true,
+  "hasExteriorSection": true,
+  "hasFacilitiesSection": true,
+  "hasEnergySection": true,
+  "hasPlanningSection": true,
+  "hasFinancialSection": true,
+  "hasPublicSaleSection": false
+ },
+ "unitGroupings": [],
+ "displayFlags": {
+  "main": null,
+  "secondary": [],
+  "percentSold": null
+ },
+ "statistics": {
+  "bookmarkCount": 12,
+  "viewCount": 635,
+  "alertPrice": null,
+  "creationDate": null,
+  "description": null,
+  "isAlertEmailSet": null,
+  "rating": null,
+  "wasOwnerContacted": null,
+  "wasPropertyVisited": null
+ }
+}

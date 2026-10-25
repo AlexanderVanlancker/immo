@@ -1,0 +1,11 @@
+{
+  "name": "immoweb-listing-zipper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dev scripts for the Immoweb Listing Zipper Chrome extension (the extension itself has no dependencies).",
+  "scripts": {
+    "test": "node test/run.mjs && node test/orchestration.mjs",
+    "test:network": "node test/run.mjs --network && node test/orchestration.mjs",
+    "icons": "python3 tools/make-icons.py"
+  }
+}
